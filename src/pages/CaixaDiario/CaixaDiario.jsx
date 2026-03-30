@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "./CaixaDiario.module.css";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/cash/",
+  baseURL: "https://cotion.discloud.app/cash/",
   withCredentials: true,
 });
 

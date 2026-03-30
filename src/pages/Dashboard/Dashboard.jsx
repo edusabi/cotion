@@ -3,7 +3,7 @@ import * as XLSX from "xlsx";
 import styles from "./Dashboard.module.css";
 
 // ⚠️ ATENÇÃO: Altere para a URL base real do seu servidor Node.js
-const API_URL = "http://localhost:3000/products"; 
+const API_URL = "https://cotion.discloud.app/products"; 
 
 const Dashboard = () => {
   const [produtos, setProdutos] = useState([]);

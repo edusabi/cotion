@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   // 🔥 verifica se já está logado ao iniciar
   useEffect(() => {
-    axios.get("http://localhost:3000/me", {
+    axios.get("https://cotion.discloud.app/me", {
       withCredentials: true
     })
     .then(res => setUser(res.data))
@@ -20,13 +20,13 @@ export function AuthProvider({ children }) {
   // 🔐 login
   async function login(email, password) {
     const res = await axios.post(
-      "http://localhost:3000/auth/login",
+      "https://cotion.discloud.app/auth/login",
       { email, password },
       { withCredentials: true }
     );
 
     // depois do login, pega o usuário
-    const me = await axios.get("http://localhost:3000/me", {
+    const me = await axios.get("https://cotion.discloud.app/me", {
       withCredentials: true
     });
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
 
   // 🚪 logout
   async function logout() {
-    await axios.post("http://localhost:3000/auth/logout", {}, {
+    await axios.post("https://cotion.discloud.app/auth/logout", {}, {
       withCredentials: true
     });
 
