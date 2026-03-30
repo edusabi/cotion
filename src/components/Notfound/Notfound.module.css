@@ -1,0 +1,72 @@
+.container {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #0b1120;
+}
+
+.glassCard {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 60px 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  backdrop-filter: blur(12px);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.errorCode {
+  font-size: 6rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(135deg, #34d399, #1abc9c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.divider {
+  height: 2px;
+  width: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 20px auto;
+}
+
+.glassCard h2 {
+  color: #f8fafc;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.glassCard p {
+  color: #94a3b8;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.primaryBtn {
+  padding: 14px 30px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #0f172a;
+  background: linear-gradient(135deg, #34d399, #1abc9c);
+  transition: 0.2s;
+  font-size: 1rem;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
+}
+
+@media (max-width: 480px) {
+  .errorCode {
+    font-size: 4.5rem;
+  }
+}
