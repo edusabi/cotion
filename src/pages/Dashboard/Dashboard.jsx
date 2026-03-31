@@ -53,7 +53,7 @@ const Dashboard = () => {
     
     if (confirmar) {
       try {
-        await axios.post(`${API_URL}/api/cancel-subscription`, {}, { withCredentials: true });
+        await axios.post(`${API_URL}/api/cancel_subscription`, {}, { withCredentials: true });
         alert("Assinatura cancelada com sucesso.");
         window.location.reload();
       } catch (err) {
