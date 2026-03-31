@@ -87,7 +87,7 @@ const Home = () => {
             <button 
               onClick={() => user?.is_premium ? navigate("/dashboard") : document.getElementById('inscreva').scrollIntoView()} 
               className={styles.primaryBtn}
-            >
+            style={{cursor: "pointer"}}>
               {user?.is_premium ? "Acessar Dashboard 📊" : "Descobrir meu lucro agora 💰"}
             </button>
           </div>
