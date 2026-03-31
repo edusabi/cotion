@@ -14,6 +14,7 @@ import Register from "./pages/Register/Register";
 import Dashboard from './pages/Dashboard/Dashboard';
 import CaixaDiario from './pages/CaixaDiario/CaixaDiario';
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import ReversePricing from "./components/ReversePricing/ReversePricing";
 
 function App() {
   return (
@@ -51,6 +52,15 @@ function App() {
           element={
             <PrivateRoute>
               <CaixaDiario />
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path='/reverse_pricing' 
+          element={
+            <PrivateRoute>
+              <ReversePricing />
             </PrivateRoute>
           } 
         />
