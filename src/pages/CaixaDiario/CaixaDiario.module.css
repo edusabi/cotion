@@ -82,7 +82,7 @@
   color: #0b1120; /* Texto escuro sobre o fundo claro */
   
   /* Gradiente turquesa para verde alface */
-  background: linear-gradient(135deg, #1abc9c 0%, #34d399 100%);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
   
   transition: all 0.2s ease;
   white-space: nowrap;
