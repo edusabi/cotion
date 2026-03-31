@@ -60,10 +60,6 @@ const About = () => {
             </p>
           </div>
 
-          <div className={styles.footerBrand}>
-            <p><strong>Cotion</strong> — Onde cada centavo é valorizado.</p>
-          </div>
-
           <div className={styles.transparencyBox}>
             <div className={styles.transparencyHeader}>
               <FiShield className={styles.shieldIcon} />
