@@ -139,7 +139,7 @@ const Home = () => {
           {!user?.is_premium && (
             <div className={styles.priceBox}>
               <span className={styles.originalPrice}>De R$ 49,90</span>
-              <span className={styles.priceValue}>R$ 24,90</span>
+              <span className={styles.priceValue}>R$ 24,99</span>
               <span className={styles.priceFreq}>/ mês</span>
             </div>
           )}
@@ -156,7 +156,7 @@ const Home = () => {
                 fontSize: "1.1rem"
             }}
           >
-            {isProcessing ? "Gerando Pagamento Seguro..." : user?.is_premium ? "Ir para o Sistema" : "Assinar Cotion Premium Agora"}
+            {isProcessing ? "Gerando Pagamento Seguro..." : user?.is_premium ? "Ir para o Sistema" : "Assinar Premium Agora"}
           </button>
           
           {!user && (

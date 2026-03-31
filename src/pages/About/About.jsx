@@ -63,6 +63,23 @@ const About = () => {
           <div className={styles.footerBrand}>
             <p><strong>Cotion</strong> — Onde cada centavo é valorizado.</p>
           </div>
+
+          <div className={styles.transparencyBox}>
+            <div className={styles.transparencyHeader}>
+              <FiShield className={styles.shieldIcon} />
+              <h3>Compromisso Cotion de Transparência</h3>
+            </div>
+            <p>
+              "O Cotion <strong>não faz cobranças automáticas</strong> no seu cartão. 
+              Ao fim dos 30 dias, você escolhe se deseja renovar por mais um mês. 
+              Sem letras miúdas, sem renovações escondidas e sem burocracia."
+            </p>
+          </div>
+
+          <div className={styles.footerBrand}>
+            <p><strong>Cotion</strong> — Onde cada centavo é valorizado.</p>
+          </div>
+
         </div>
       </section>
     </main>

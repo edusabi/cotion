@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import axios from "axios";
 import styles from "./Dashboard.module.css";
+import { FiStar, FiAlertCircle, FiTrash2, FiPrinter, FiFileText } from "react-icons/fi";
 
-// ⚠️ ATENÇÃO: Altere para a URL base real do seu servidor Node.js
-const API_URL = "https://cotion.discloud.app/products"; 
+// URL base do seu servidor
+const API_URL = "https://cotion.discloud.app"; 
 
 const Dashboard = () => {
   const [produtos, setProdutos] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   
   const [produtoAtual, setProdutoAtual] = useState({
@@ -22,20 +25,40 @@ const Dashboard = () => {
   const [produtoMultiCanal, setProdutoMultiCanal] = useState(null);
 
   useEffect(() => {
-    fetchProdutos();
+    fetchData();
   }, []);
 
-  const fetchProdutos = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch(API_URL, { credentials: "include" });
-      if (!res.ok) throw new Error("Erro ao buscar dados");
-      const data = await res.json();
-      setProdutos(data);
+      // Busca dados do usuário e produtos em paralelo
+      const [userRes, prodRes] = await Promise.all([
+        axios.get(`${API_URL}/me`, { withCredentials: true }),
+        axios.get(`${API_URL}/products`, { withCredentials: true })
+      ]);
+      
+      setUser(userRes.data);
+      setProdutos(prodRes.data);
     } catch (error) {
-      console.error(error);
-      alert("Erro ao carregar seus produtos. Verifique se está logado.");
+      console.error("Erro ao carregar dados:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 🔥 FUNÇÃO DE CANCELAMENTO
+  const handleCancelSubscription = async () => {
+    const confirmar = window.confirm(
+      "Tem certeza que deseja cancelar seu acesso Premium? Você perderá o acesso às ferramentas exclusivas imediatamente."
+    );
+    
+    if (confirmar) {
+      try {
+        await axios.post(`${API_URL}/api/cancel-subscription`, {}, { withCredentials: true });
+        alert("Assinatura cancelada com sucesso.");
+        window.location.reload();
+      } catch (err) {
+        alert("Erro ao processar cancelamento. Tente novamente.");
+      }
     }
   };
 
@@ -66,7 +89,6 @@ const Dashboard = () => {
     return { precoIdeal, lucroReal };
   };
 
-  // 🔥 LISTA ATUALIZADA: Sem o Site Próprio (Cartão)
   const CANAIS_MARKETPLACE = [
     { nome: "Mercado Livre (Clássico)", taxaPerc: 13.0, taxaFixa: 6.00, isML: true },
     { nome: "Mercado Livre (Premium)", taxaPerc: 18.0, taxaFixa: 6.00, isML: true },
@@ -121,32 +143,14 @@ const Dashboard = () => {
     if (!produtoAtual.nome) return alert("Dê um nome ao produto!");
 
     try {
-      const method = produtoAtual.id ? "PUT" : "POST";
-      const url = produtoAtual.id ? `${API_URL}/${produtoAtual.id}` : API_URL;
+      const method = produtoAtual.id ? "put" : "post";
+      const url = produtoAtual.id ? `${API_URL}/products/${produtoAtual.id}` : `${API_URL}/products`;
 
-      const payload = {
-        nome: produtoAtual.nome,
-        custo_raw: produtoAtual.custo_raw,
-        frete_raw: produtoAtual.frete_raw,
-        taxas: produtoAtual.taxas,
-        margem: produtoAtual.margem,
-        foto: produtoAtual.foto 
-      };
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload) 
-      });
-
-      if (!res.ok) throw new Error("Erro ao salvar produto");
+      await axios[method](url, produtoAtual, { withCredentials: true });
       
-      await fetchProdutos(); 
+      await fetchData(); 
       limparFormulario();
-
     } catch (error) {
-      console.error(error);
       alert("Ocorreu um erro ao salvar o produto.");
     }
   };
@@ -154,11 +158,9 @@ const Dashboard = () => {
   const excluirProduto = async (id) => {
     if(!window.confirm("Tem certeza que deseja excluir este produto?")) return;
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE", credentials: "include" });
-      if (!res.ok) throw new Error("Erro ao deletar");
+      await axios.delete(`${API_URL}/products/${id}`, { withCredentials: true });
       setProdutos(produtos.filter(p => p.id !== id));
     } catch (error) {
-      console.error(error);
       alert("Erro ao excluir.");
     }
   };
@@ -195,16 +197,43 @@ const Dashboard = () => {
 
   return (
     <div className={styles.container}>
+      {/* SEÇÃO DE ASSINATURA */}
+      <section className={`${styles.subscriptionCard} ${styles.noPrint}`}>
+        <div className={styles.subInfo}>
+          <div className={styles.subHeader}>
+            <FiStar className={user?.is_premium ? styles.iconGold : ""} />
+            <h3>Status da Conta: {user?.is_premium ? "Premium" : "Gratuito"}</h3>
+          </div>
+          {user?.is_premium ? (
+            <p>Seu acesso premium está ativo e garante todas as funcionalidades liberadas.</p>
+          ) : (
+            <p>Você está usando a versão limitada. Assine para liberar relatórios e multi-canais.</p>
+          )}
+        </div>
+        
+        <div className={styles.subActions}>
+          {user?.is_premium ? (
+            <button onClick={handleCancelSubscription} className={styles.btnCancelSub}>
+              Cancelar Assinatura
+            </button>
+          ) : (
+            <button onClick={() => window.location.href = '/'} className={styles.btnUpgrade}>
+              Seja Premium
+            </button>
+          )}
+        </div>
+      </section>
+
       <header className={`${styles.header} ${styles.noPrint}`}>
         <h1>🥇 Sistema de Precificação</h1>
         <p>Cadastre seus produtos, calcule margens e exporte seus relatórios.</p>
         
         <div className={styles.acoesTop}>
-          <button onClick={exportarExcel} className={styles.btnSecundario} style={{ opacity: produtos.length === 0 ? 0.5 : 1 }}>
-            📊 Baixar Excel
+          <button onClick={exportarExcel} className={styles.btnSecundario} disabled={produtos.length === 0}>
+            <FiFileText /> Baixar Excel
           </button>
-          <button onClick={() => window.print()} className={styles.btnSecundario} style={{ opacity: produtos.length === 0 ? 0.5 : 1 }}>
-            🖨️ Salvar PDF
+          <button onClick={() => window.print()} className={styles.btnSecundario} disabled={produtos.length === 0}>
+            <FiPrinter /> Salvar PDF
           </button>
         </div>
       </header>
@@ -287,7 +316,7 @@ const Dashboard = () => {
                         🛒 Canais
                       </button>
                       <button onClick={() => setProdutoAtual(prod)} title="Editar Produto">✏️</button>
-                      <button onClick={() => excluirProduto(prod.id)} title="Excluir Produto">🗑️</button>
+                      <button onClick={() => excluirProduto(prod.id)} title="Excluir Produto" className={styles.btnTrash}><FiTrash2 /></button>
                     </div>
                   </div>
                 )
@@ -304,7 +333,6 @@ const Dashboard = () => {
               <h2>🛒 Inteligência Multi-Canal</h2>
               <button onClick={() => setProdutoMultiCanal(null)} className={styles.closeBtn}>X</button>
             </div>
-            {/* O modal e a tabela de impressão agora refletem apenas os 5 canais de marketplace restantes */}
             <div className={styles.modalProdInfo}>
               {produtoMultiCanal.foto && <img src={produtoMultiCanal.foto} alt="Produto" />}
               <div>
@@ -348,6 +376,7 @@ const Dashboard = () => {
         </div>
       )}
 
+      {/* Tabela oculta usada apenas para a função de impressão do navegador */}
       <div className={styles.apenasImpressao}>
         <h2>Relatório de Precificação Multi-Canal</h2>
         <table className={styles.tabelaImpressao}>
