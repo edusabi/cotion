@@ -1,0 +1,217 @@
+/* components/ReversePricing/ReversePricing.module.css */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #1e1e1e; /* Estilo escuro combinando com a sua imagem */
+  border-radius: 12px;
+  color: #f1f1f1;
+  font-family: sans-serif;
+}
+
+.header h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header p {
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.inputGroup input,
+.inputGroup select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.button {
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.error {
+  padding: 12px;
+  background-color: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.resultCard {
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background-color: #2a2a2a;
+}
+
+.resultCard.success {
+  border-color: #10b981; /* Verde */
+}
+
+.resultCard.danger {
+  border-color: #ef4444; /* Vermelho */
+}
+
+.resultCard h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.summaryText {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.detailsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid #444;
+  padding-top: 16px;
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.textGreen { color: #10b981; }
+.textRed { color: #ef4444; }
+
+/* =========================================
+   Responsividade (Media Queries)
+   ========================================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+    border-radius: 8px;
+    /* Adiciona uma margem lateral pequena caso o container esteja colado na tela */
+    margin: 0 12px; 
+  }
+
+  .header h2 {
+    font-size: 1.25rem;
+  }
+
+  .header p {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .form {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .inputGroup label {
+    font-size: 0.85rem;
+  }
+
+  .inputGroup input,
+  .inputGroup select {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .button {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .resultCard {
+    padding: 16px;
+  }
+
+  .resultCard h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .summaryText {
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+  }
+
+  /* Em telas menores, quebra a linha dos detalhes para evitar que o texto sobreponha os valores */
+  .detailItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 0.9rem;
+  }
+
+  .detailItem strong {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ajustes extras para celulares muito pequenos */
+  .container {
+    margin: 0 8px;
+    padding: 12px;
+  }
+
+  .header h2 {
+    font-size: 1.15rem;
+  }
+}
