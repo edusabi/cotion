@@ -249,3 +249,117 @@
   .financialGrid { grid-template-columns: 1fr; }
   .verdictSection { flex-direction: column; text-align: center; }
 }
+
+/* =========================================
+   RESPONSIVIDADE (MEDIA QUERIES)
+   ========================================= */
+
+/* Tablets e Telas Médias */
+@media (max-width: 768px) {
+  .container {
+    margin: 1.5rem 1rem;
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .header h2 {
+    font-size: 1.8rem;
+  }
+
+  .inputRow { 
+    grid-template-columns: 1fr; /* Empilha o seletor de canal e o preço */
+    gap: 20px;
+  }
+
+  .breakEvenValue {
+    font-size: 1.8rem;
+  }
+}
+
+/* Celulares Padrão */
+@media (max-width: 600px) {
+  .container {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .header h2 {
+    font-size: 1.5rem;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+  }
+
+  .verdictSection { 
+    flex-direction: column; 
+    text-align: center; 
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .verdictText h3 {
+    font-size: 1.15rem;
+  }
+
+  .breakEvenBox { 
+    flex-direction: column; 
+    text-align: center; 
+    gap: 12px; 
+    padding: 16px;
+  }
+
+  .breakEvenTitle {
+    font-size: 1rem;
+  }
+
+  .breakEvenValue {
+    font-size: 1.6rem;
+  }
+
+  .financialGrid { 
+    grid-template-columns: 1fr; /* Empilha Margem e Lucro */
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .financeItem strong {
+    font-size: 1.5rem;
+  }
+
+  .costBreakdown {
+    padding: 16px;
+  }
+}
+
+/* Celulares Pequenos (Ex: iPhone SE) */
+@media (max-width: 400px) {
+  .container {
+    margin: 1rem 0.5rem;
+    padding: 1.2rem;
+  }
+
+  .button {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  .costItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+  }
+
+  .costItem span:last-child {
+    font-weight: 600;
+  }
+
+  .costTotal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
