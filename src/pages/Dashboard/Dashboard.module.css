@@ -485,3 +485,114 @@
   }
 }
 
+/* --- Seção de Assinatura (Subscription Card) --- */
+
+.subscriptionCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.subInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.subHeader h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.subInfo p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+/* Ícone de Estrela Dourada para Premium */
+.iconGold {
+  color: #fbbf24;
+  filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.5));
+  font-size: 1.4rem;
+}
+
+.subActions {
+  display: flex;
+  align-items: center;
+}
+
+/* Botão de Upgrade (Seja Premium) */
+.btnUpgrade {
+  background: linear-gradient(120deg, #38bdf8, #818cf8);
+  color: #0f172a;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btnUpgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
+}
+
+/* Botão de Cancelar (Sutil e perigoso) */
+.btnCancelSub {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnCancelSub:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+/* Responsividade para o card de assinatura */
+@media (max-width: 768px) {
+  .subscriptionCard {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 1.5rem;
+  }
+
+  .subHeader {
+    justify-content: center;
+  }
+
+  .btnUpgrade, .btnCancelSub {
+    width: 100%;
+  }
+}
+
+/* --- Ajuste para esconder na impressão --- */
+@media print {
+  .noPrint {
+    display: none !important;
+  }
+}
