@@ -3,3 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+button{
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+}
