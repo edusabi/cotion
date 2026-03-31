@@ -18,6 +18,7 @@ import Register from "./pages/Register/Register";
 import Dashboard from './pages/Dashboard/Dashboard';
 import CaixaDiario from './pages/CaixaDiario/CaixaDiario';
 import ReversePricing from "./pages/ReversePricing/ReversePricing";
+import MachineComparator from "./pages/MachineComparator/MachineComparator";
 
 function App() {
   return (
@@ -67,6 +68,15 @@ function App() {
             </PrivateRoute>
           } 
         />
+
+          <Route 
+            path='/calculadora' 
+            element={
+              <PrivateRoute>
+                <MachineComparator />
+              </PrivateRoute>
+            } 
+          />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
