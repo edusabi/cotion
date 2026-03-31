@@ -102,6 +102,7 @@ const Home = () => {
           <div className={styles.images}>
             {/* Você pode trocar essa imagem por um print da sua tela do Comparador depois! */}
             <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=640&q=80" alt="dashboard financeiro" />
+            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=640&q=80" alt="dashboard financeiro" />
           </div>
           <div className={styles.pulse}></div>
         </div>
