@@ -1,3 +1,4 @@
+/* Seu código original mantido */
 .navbar {
   position: sticky;
   top: 0;
@@ -24,11 +25,12 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  transition: all 0.3s ease-in-out; /* Adicionado para suavizar a entrada no mobile */
 }
 
 .menu a {
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-secondary); /* Certifique-se de que essa variável existe, ou mude para branco/cinza */
   padding: 0.6rem 0.8rem;
   border-radius: 10px;
   transition: all 0.2s ease;
@@ -44,6 +46,60 @@
   background: rgba(34, 197, 94, 0.25);
 }
 
-.iconLogout{
+.iconLogout {
   cursor: pointer;
+  color: white; /* Adicionado para garantir visibilidade */
+  font-size: 1.2rem;
+}
+
+/* =======================================================
+   NOVO: Estilos do Toggle e Media Query para Responsividade 
+   ======================================================= */
+
+.toggleButton {
+  display: none; /* Escondido no Desktop */
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+  z-index: 30;
+}
+
+@media (max-width: 768px) {
+  .toggleButton {
+    display: block; /* Mostra o ícone hambúrguer no mobile */
+  }
+
+  .menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(120deg, rgba(15, 23, 42, 0.98), rgba(21, 40, 70, 0.98));
+    backdrop-filter: blur(10px);
+    flex-direction: column; /* Coloca os links em coluna */
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    
+    /* Estado inicial do menu no mobile (escondido) */
+    transform: translateY(-150%);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+  }
+
+  /* Estado ativo do menu no mobile (visível) */
+  .menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Ajustes extras para os links no modo vertical */
+  .menu a {
+    width: 80%;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 1rem;
+  }
 }

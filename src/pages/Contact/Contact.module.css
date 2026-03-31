@@ -106,3 +106,62 @@
   color: #94a3b8;
   font-size: 0.9rem;
 }
+
+/* =======================================================
+   RESPONSIVIDADE (TABLET & MOBILE)
+   ======================================================= */
+
+/* Para Tablets (até 768px) */
+@media (max-width: 768px) {
+  .contactCard {
+    padding: 35px 25px; /* Reduz um pouco o espaçamento interno */
+  }
+
+  .footerInfo {
+    /* Muda de linha para coluna para os itens não ficarem espremidos */
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; 
+  }
+}
+
+/* Para Celulares (até 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px; /* Dá mais espaço para o card na tela do celular */
+  }
+
+  .contactCard {
+    padding: 25px 15px; /* Maximiza o espaço para os inputs de texto */
+    border-radius: 12px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem; /* Ajusta o título para não quebrar feio */
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+  }
+
+  .form {
+    gap: 15px; /* Aproxima um pouco mais os campos do formulário */
+  }
+
+  .input, .textarea {
+    padding: 10px 14px; /* Inputs levemente mais compactos */
+    font-size: 0.95rem;
+  }
+
+  .primaryBtn {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .footerInfo {
+    margin-top: 20px;
+    padding-top: 15px;
+    font-size: 0.8rem;
+  }
+}

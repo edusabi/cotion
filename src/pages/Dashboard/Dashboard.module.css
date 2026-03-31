@@ -334,6 +334,145 @@
   color: black;
 }
 
+/* =======================================================
+   RESPONSIVIDADE (MOBILE & TABLET)
+   ======================================================= */
+
+/* Para tablets e celulares grandes (até 768px) */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem auto;
+    padding: 0 0.8rem;
+  }
+
+  .header {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+  }
+
+  .acoesTop {
+    flex-direction: column; /* Empilha os botões de ação do topo */
+    width: 100%;
+  }
+
+  .btnSecundario {
+    width: 100%; /* Botões ocupam a largura toda */
+    text-align: center;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  /* Ajustes para a lista de produtos */
+  .produtoItem {
+    padding: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .prodInfo {
+    width: 100%;
+  }
+
+  .prodThumb, .prodThumbPlaceholder {
+    width: 50px;
+    height: 50px;
+  }
+
+  .prodValores {
+    width: 100%;
+    flex-direction: column; /* Empilha Preço e Custo */
+    gap: 0.5rem;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.8rem;
+    border-radius: 8px;
+  }
+
+  .prodAcoes {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 0.8rem;
+  }
+
+  /* =========================================
+     AJUSTES DO MODAL NO MOBILE
+     ========================================= */
+  .modalContent {
+    padding: 1rem;
+    max-height: 95vh;
+  }
+
+  .modalHeader h2 {
+    font-size: 1.2rem;
+  }
+
+  .modalProdInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Transformando a tabela do modal em "cards" no mobile */
+  .modalTable thead {
+    display: none; /* Esconde o cabeçalho da tabela */
+  }
+
+  .modalTable, .modalTable tbody, .modalTable tr, .modalTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .modalTable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .modalTable td {
+    text-align: right;
+    padding: 0.8rem;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .modalTable td:last-child {
+    border-bottom: none;
+  }
+
+  /* Adiciona os rótulos falsos na frente dos dados (via pseudo-elemento) */
+  .modalTable td::before {
+    content: attr(data-label); /* Requer que você coloque data-label="..." no <td> lá no React */
+    position: absolute;
+    left: 0.8rem;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+    color: var(--text-secondary);
+  }
+}
+
+/* Para celulares muito pequenos (até 480px) */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .btnPrincipal, .btnCancelar, .btnSecundario, .btnFecharModal {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+}
+
 /* Regras de impressão do navegador */
 @media print {
   /* Esconde o app inteiro, menos a div que queremos imprimir */
@@ -345,3 +484,4 @@
     color: black !important;
   }
 }
+

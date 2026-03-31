@@ -84,11 +84,76 @@
   padding-top: 30px;
 }
 
-@media (max-width: 600px) {
-  .aboutCard {
-    padding: 30px 20px;
+/* =======================================================
+   RESPONSIVIDADE (TABLET & MOBILE)
+   ======================================================= */
+
+/* Para Tablets (até 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 15px; /* Reduz o espaço em volta do card principal */
   }
+
+  .aboutCard {
+    padding: 40px 30px; /* Reduz o padding interno do card */
+  }
+
   .header h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
+  }
+
+  .content p {
+    font-size: 1.05rem; /* Ajusta levemente o texto para caber melhor */
+  }
+
+  .gridFeatures {
+    gap: 15px; /* Aproxima um pouco mais os cards de features */
+    margin: 30px 0;
+  }
+}
+
+/* Para Celulares (até 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px;
+  }
+
+  .aboutCard {
+    padding: 30px 20px; /* Mantém o que você já tinha planejado para o mobile */
+    border-radius: 16px; /* Suaviza a borda para não parecer tão "quadradão" na tela pequena */
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem; /* Garante que o título não quebre em 3 linhas */
+    margin-top: 10px;
+  }
+
+  .content p {
+    font-size: 0.95rem; /* Melhora a leitura em telas pequenas */
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .gridFeatures {
+    /* Força os cards a ficarem em 1 coluna (empilhados) em telas muito estreitas */
+    grid-template-columns: 1fr; 
+  }
+
+  .featureItem {
+    padding: 20px 15px;
+  }
+
+  .featureItem h3 {
+    font-size: 1.1rem;
+  }
+
+  .footerText {
+    font-size: 0.85rem;
+    padding-top: 20px;
   }
 }

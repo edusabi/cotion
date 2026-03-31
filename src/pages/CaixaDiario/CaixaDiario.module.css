@@ -280,3 +280,79 @@
   gap: 15px; /* Aumenta o espaço entre o lápis e o lixo */
   justify-content: flex-start;
 }
+
+/* =======================================================
+   RESPONSIVIDADE (MOBILE E TABLET)
+   ======================================================= */
+
+/* Para tablets e celulares (telas até 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 10px;
+    gap: 3rem;
+  }
+
+  .formCard {
+    padding: 25px 20px;
+  }
+
+  .formCard h2 {
+    font-size: 1.4rem;
+  }
+
+  /* Empilha os inputs e o botão */
+  .formInline {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .inputField,
+  .btnPrincipal {
+    width: 100%; /* Faz todos os campos ocuparem a largura total no mobile */
+  }
+
+  .btnPrincipal {
+    margin-top: 10px;
+  }
+
+  /* Ajustes da Tabela para não quebrar no mobile (Scroll Horizontal) */
+  .listCard {
+    padding: 20px 15px;
+    overflow-x: auto; /* Permite arrastar a tabela para o lado em telas pequenas */
+  }
+
+  .tabela {
+    min-width: 600px; /* Força uma largura mínima para a tabela manter a estrutura */
+  }
+
+  .tabela th, 
+  .tabela td {
+    padding: 12px 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Para celulares muito pequenos (telas até 480px) */
+@media (max-width: 480px) {
+  .formCard h2 {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .feedbackCard {
+    padding: 15px;
+  }
+
+  .feedbackCard h3 {
+    font-size: 1rem;
+  }
+
+  .feedbackCard p {
+    font-size: 0.85rem;
+  }
+}

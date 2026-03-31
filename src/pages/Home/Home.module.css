@@ -264,3 +264,84 @@
     min-height: 200px;
   }
 }
+
+
+/* Ajustes para Celulares Grandes (até 768px) */
+@media (max-width: 768px) {
+  .homeWrap {
+    margin: 0 auto 2rem;
+  }
+
+  .heroInner h1 {
+    font-size: 2.2rem; /* Reduz um pouco mais o título principal */
+  }
+
+  .heroInner p {
+    font-size: 1rem;
+  }
+
+  .stats {
+    grid-template-columns: 1fr; /* Empilha as caixas de mensagem/stats */
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr; /* Empilha os cards de features */
+    gap: 1.5rem;
+  }
+
+  .images {
+    flex-direction: column; /* Empilha as imagens do heroVisual */
+    align-items: center;
+  }
+
+  .images img {
+    width: 90%; /* Ajusta a largura das imagens para ocupar bem o espaço */
+    margin-bottom: 1rem;
+  }
+
+  .priceCard {
+    padding: 1.8rem 1.5rem;
+  }
+
+  .priceValue {
+    font-size: 2.5rem;
+  }
+}
+
+/* Ajustes para Celulares Pequenos (até 480px) */
+@media (max-width: 480px) {
+  .heroInner {
+    padding: 2rem 1rem;
+  }
+
+  .heroInner h1 {
+    font-size: 1.8rem;
+  }
+
+  .ctaRow {
+    flex-direction: column; /* Empilha os botões no celular pequeno */
+    width: 100%;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .visor {
+    top: 10px;
+    right: 10px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .featureList h2 {
+    font-size: 1.5rem;
+  }
+
+  .buyBtn {
+    width: 100%; /* Botão de compra ocupando a tela toda */
+    padding: 1rem;
+  }
+}

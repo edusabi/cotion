@@ -103,3 +103,26 @@
   margin-bottom: 15px;
   font-size: 14px;
 }
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem; /* Evita que o card cole nas bordas da tela */
+  }
+
+  .card {
+    padding: 25px 20px; /* Reduz o padding interno para liberar espaço para os inputs */
+  }
+
+  .card h1 {
+    font-size: 1.5rem; /* Deixa o título levemente menor */
+  }
+
+  .subtitle {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+
+  .input {
+    padding: 10px; /* Reduz um pouco o tamanho do campo para telas muito pequenas */
+  }
+}
