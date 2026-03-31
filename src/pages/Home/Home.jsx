@@ -3,25 +3,30 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
 
-const API_URL = "https://cotion.discloud.app/"; // Lembre-se de mudar para sua URL real no deploy
+const API_URL = "https://cotion.discloud.app"; // Lembre-se de mudar para sua URL real no deploy
 
 const messages = [
-  "💰 Economize centenas por mês",
-  "🚀 Ferramenta 100% para todos os negócios",
+  "💰 Economize centenas de reais fugindo de taxas abusivas",
+  "🚀 A suíte financeira definitiva para o comércio local e digital",
 ];
 
+// Atualizado com TODAS as funcionalidades matadoras do seu app
 const cards = [
   {
-    title: "Acerte no preço em 3 minutos",
-    description: "Insira custo, despesas e meta de margem e veja o valor ideal na hora.",
+    title: "🎯 Precificação Inteligente",
+    description: "Insira custos, fretes e impostos. O sistema calcula o preço exato para você bater sua meta de margem de lucro.",
   },
   {
-    title: "Menos tempo, mais lucro",
-    description: "Saiba quanto está perdendo hoje e qual o impacto real na sua lucratividade.",
+    title: "🕵️‍♂️ Espião de Concorrente",
+    description: "Engenharia reversa pura: descubra instantaneamente se vale a pena cobrir a oferta da concorrência ou se é prejuízo na certa.",
   },
   {
-    title: "Resultados para todos os negócios",
-    description: "Seja e-commerce, loja física ou serviços, você precifica com confiança.",
+    title: "💳 Comparador de Maquininhas",
+    description: "Digite o valor da venda e saiba na hora qual das suas maquininhas vai colocar mais dinheiro no seu bolso. Pare de perder para as taxas.",
+  },
+  {
+    title: "📊 Caixa Diário Inteligente",
+    description: "Registre suas entradas e saídas de forma simples e tenha clareza absoluta de quanto a sua empresa realmente lucrou no dia.",
   },
 ];
 
@@ -43,60 +48,60 @@ const Home = () => {
   }, []);
 
   const handlePurchase = async () => {
-  if (!user) {
-    navigate("/login");
-    return;
-  }
-
-  if (user.is_premium) {
-    navigate("/dashboard");
-    return;
-  }
-
-  setIsProcessing(true);
-  try {
-    const response = await axios.post(
-      `${API_URL}/api/checkout`,
-      {}, 
-      { withCredentials: true }
-    );
-
-    if (response.data.checkoutUrl) {
-      // O replace garante que o usuário não fique preso no histórico ao voltar
-      window.location.assign(response.data.checkoutUrl);
+    if (!user) {
+      navigate("/login");
+      return;
     }
-  } catch (error) {
-    console.error("Erro ao gerar checkout:", error);
-    alert("Erro ao gerar link de pagamento. Tente novamente.");
-  } finally {
-    setIsProcessing(false);
-  }
-};
+
+    if (user.is_premium) {
+      navigate("/dashboard");
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/checkout`,
+        {}, 
+        { withCredentials: true }
+      );
+
+      if (response.data.checkoutUrl) {
+        // O replace garante que o usuário não fique preso no histórico ao voltar
+        window.location.assign(response.data.checkoutUrl);
+      }
+    } catch (error) {
+      console.error("Erro ao gerar checkout:", error);
+      alert("Erro ao gerar link de pagamento. Tente novamente.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <main className={styles.homeWrap}>
       {/* SEÇÃO HERO */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <h1>Venda com preço certo. Lucro de verdade.</h1>
+          <h1>Parem de roubar o seu lucro.</h1>
           <p>
-            Descubra rapidamente quanto deve cobrar para cobrir custos e sair no
-            lucro. Focado em resultados reais para empreendedores.
+            Assuma o controle financeiro do seu negócio. Compare maquininhas, espione os custos para cobrir a concorrência e precifique com precisão cirúrgica.
           </p>
           <div className={styles.ctaRow}>
             <button 
               onClick={() => user?.is_premium ? navigate("/dashboard") : document.getElementById('inscreva').scrollIntoView()} 
               className={styles.primaryBtn}
-            style={{cursor: "pointer"}}>
-              {user?.is_premium ? "Acessar Dashboard 📊" : "Descobrir meu lucro agora 💰"}
+              style={{cursor: "pointer"}}>
+              {user?.is_premium ? "Acessar meu Dashboard 📊" : "Proteger meu lucro agora 💰"}
             </button>
           </div>
         </div>
         
         <div className={styles.heroVisual}>
-          <div className={styles.visor}>+12% de margem em 5 minutos</div>
+          <div className={styles.visor}>Economia real em cada venda</div>
           <div className={styles.images}>
-            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=640&q=80" alt="dashboard" />
+            {/* Você pode trocar essa imagem por um print da sua tela do Comparador depois! */}
+            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=640&q=80" alt="dashboard financeiro" />
           </div>
           <div className={styles.pulse}></div>
         </div>
@@ -113,6 +118,8 @@ const Home = () => {
 
       {/* SEÇÃO CARDS DE BENEFÍCIOS */}
       <section className={styles.featureList} id="features">
+        <h2>Tudo que você precisa em um só lugar</h2>
+        <p>Desenvolvido para empreendedores que não têm tempo a perder.</p>
         <div className={styles.cardGrid}>
           {cards.map((item) => (
             <article key={item.title} className={styles.featureCard}>
@@ -126,13 +133,13 @@ const Home = () => {
       {/* SEÇÃO DE PREÇO / ASSINATURA */}
       <section className={styles.pricing} id="inscreva">
         <div className={styles.priceCard}>
-          <h2>{user?.is_premium ? "Você já é Premium! ⭐" : "Pronto para começar?"}</h2>
-          <p>Acesso ilimitado à ferramenta de precificação e caixa diário.</p>
+          <h2>{user?.is_premium ? "Você já é Premium! ⭐" : "O sistema que se paga no primeiro dia."}</h2>
+          <p>Acesso ilimitado ao Comparador de Maquininhas, Espião de Concorrentes, Precificação e Caixa Diário.</p>
           
           {!user?.is_premium && (
             <div className={styles.priceBox}>
-              <span className={styles.originalPrice}>R$ 20,00</span>
-              <span className={styles.priceValue}>R$ 9,99</span>
+              <span className={styles.originalPrice}>De R$ 49,90</span>
+              <span className={styles.priceValue}>R$ 24,90</span>
               <span className={styles.priceFreq}>/ mês</span>
             </div>
           )}
@@ -143,15 +150,18 @@ const Home = () => {
             disabled={isProcessing} 
             style={{ 
                 opacity: isProcessing ? 0.7 : 1,
-                cursor: isProcessing ? "wait" : "pointer"
+                cursor: isProcessing ? "wait" : "pointer",
+                width: "100%",
+                padding: "1.2rem",
+                fontSize: "1.1rem"
             }}
           >
-            {isProcessing ? "Processando..." : user?.is_premium ? "Ir para o Sistema" : "Assinar Agora"}
+            {isProcessing ? "Gerando Pagamento Seguro..." : user?.is_premium ? "Ir para o Sistema" : "Assinar Cotion Premium Agora"}
           </button>
           
           {!user && (
-            <p className={styles.loginAlert}>
-              * Você precisa estar logado para realizar a assinatura.
+            <p className={styles.loginAlert} style={{ marginTop: "1rem", fontSize: "0.85rem", color: "rgba(226, 232, 240, 0.6)" }}>
+              * Crie sua conta ou faça login no momento do checkout. Cancelamento a qualquer momento.
             </p>
           )}
         </div>
