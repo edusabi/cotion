@@ -41,6 +41,7 @@ export default function NavBar() {
             <Link to="/caixaDiario" onClick={closeMenu}>Caixa</Link>
             <Link to="/reverse_pricing" onClick={closeMenu}>Preço Reverso</Link>
             <Link to="/calculadora" onClick={closeMenu}>Calculadora Maquininha</Link>
+            <Link to="/taxas" onClick={closeMenu}>Minhas Taxas</Link>
             <Link to="/sobre" onClick={closeMenu}>Sobre</Link>
             <Link to="/contato" onClick={closeMenu}>Contato</Link>
             <FiLogOut 

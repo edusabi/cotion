@@ -1,64 +1,56 @@
 // components/MachineComparator/MachineComparator.jsx
-import React, { useState, useMemo } from "react";
-import { FiCreditCard, FiDollarSign, FiTrendingUp, FiAlertCircle } from "react-icons/fi";
+import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
+import { FiDollarSign, FiTrendingUp, FiAlertCircle, FiSettings } from "react-icons/fi";
 import styles from "./MachineComparator.module.css";
 
-// 🏦 TABELA DE TAXAS (Você pode editar isso depois ou puxar do banco de dados)
-// Valores simulados para recebimento na hora/1 dia útil.
-const MACHINES = [
-  {
-    id: "ton",
-    name: "Ton (MegaTon)",
-    color: "#00d700",
-    rates: { debit: 1.69, credit1x: 3.49, credit2x: 4.99, credit6x: 9.99, credit10x: 13.99, credit12x: 15.99 }
-  },
-  {
-    id: "infinitepay",
-    name: "InfinitePay",
-    color: "#202020",
-    rates: { debit: 1.38, credit1x: 3.16, credit2x: 4.19, credit6x: 7.49, credit10x: 11.20, credit12x: 12.41 }
-  },
-  {
-    id: "stone",
-    name: "Stone",
-    color: "#00b55e",
-    rates: { debit: 1.99, credit1x: 4.98, credit2x: 6.50, credit6x: 12.40, credit10x: 18.50, credit12x: 21.60 }
-  },
-  {
-    id: "pagbank",
-    name: "PagBank",
-    color: "#ffc800",
-    rates: { debit: 1.99, credit1x: 4.99, credit2x: 6.99, credit6x: 13.99, credit10x: 19.99, credit12x: 22.59 }
-  }
-];
-
-// Função auxiliar para interpolar taxas (ex: se não tem 3x, pega uma média entre 2x e 6x para simulação)
-// Em um cenário real perfeito, você cadastraria a taxa exata de 1 a 12.
-const getRateForInstallment = (rates, installments) => {
-  if (installments === 1) return rates.credit1x;
-  if (installments === 2) return rates.credit2x;
-  if (installments <= 6) return rates.credit6x; // Simplificação para o exemplo
-  if (installments <= 10) return rates.credit10x;
-  return rates.credit12x;
-};
-
 const MachineComparator = () => {
+  const [machinesList, setMachinesList] = useState([]);
   const [amount, setAmount] = useState("");
-  const [paymentType, setPaymentType] = useState("credit"); // 'debit' ou 'credit'
+  const [paymentType, setPaymentType] = useState("credit");
   const [installments, setInstallments] = useState(1);
+  const [loading, setLoading] = useState(true);
 
-  // O useMemo faz o cálculo relâmpago toda vez que o lojista digita um número
+  // Busca as maquininhas cadastradas pelo usuário ao abrir a tela
+  useEffect(() => {
+    const loadUserMachines = async () => {
+      try {
+        const response = await axios.get("https://cotion.discloud.app/machines", { 
+          withCredentials: true 
+        });
+        setMachinesList(response.data);
+      } catch (error) {
+        console.error("Erro ao carregar taxas reais do usuário:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUserMachines();
+  }, []);
+
+  // Função auxiliar para pegar a taxa correta baseada no número de parcelas
+  const getRateForInstallment = (machine, installments) => {
+    if (installments === 1) return parseFloat(machine.credit_1x || 0);
+    if (installments === 2) return parseFloat(machine.credit_2x || 0);
+    if (installments <= 6) return parseFloat(machine.credit_6x || 0);
+    if (installments <= 10) return parseFloat(machine.credit_10x || 0);
+    return parseFloat(machine.credit_12x || 0);
+  };
+
+  // Motor de Cálculo Relâmpago
   const results = useMemo(() => {
     const saleValue = parseFloat(amount);
-    if (isNaN(saleValue) || saleValue <= 0) return null;
+    
+    // Se não digitou valor válido ou não tem maquininhas, não calcula
+    if (isNaN(saleValue) || saleValue <= 0 || machinesList.length === 0) return null;
 
-    const calculations = MACHINES.map((machine) => {
+    const calculations = machinesList.map((machine) => {
       let currentRate = 0;
 
       if (paymentType === "debit") {
-        currentRate = machine.rates.debit;
+        currentRate = parseFloat(machine.debit || 0);
       } else {
-        currentRate = getRateForInstallment(machine.rates, installments);
+        currentRate = getRateForInstallment(machine, installments);
       }
 
       const feeValue = saleValue * (currentRate / 100);
@@ -72,16 +64,22 @@ const MachineComparator = () => {
       };
     });
 
-    // Ordena da mais lucrativa (maior netValue) para a menos lucrativa
+    // Ordena da mais lucrativa para a menos lucrativa
     const sortedCalculations = calculations.sort((a, b) => b.netValue - a.netValue);
-    
-    // Calcula o "Fator Venda" (quanto ele economiza usando a melhor vs a pior)
     const bestMachine = sortedCalculations[0];
     const worstMachine = sortedCalculations[sortedCalculations.length - 1];
-    const maxSavings = bestMachine.netValue - worstMachine.netValue;
+    
+    // Se só tiver 1 maquininha cadastrada, a economia é 0 (não tem com quem comparar)
+    const maxSavings = sortedCalculations.length > 1 
+      ? bestMachine.netValue - worstMachine.netValue 
+      : 0;
 
     return { list: sortedCalculations, bestMachine, worstMachine, maxSavings };
-  }, [amount, paymentType, installments]);
+  }, [amount, paymentType, installments, machinesList]);
+
+  if (loading) {
+    return <div className={styles.container} style={{ textAlign: 'center' }}>Carregando suas taxas...</div>;
+  }
 
   return (
     <div className={styles.container}>
@@ -90,88 +88,103 @@ const MachineComparator = () => {
         <p>Descubra em qual maquininha você ganha mais dinheiro nessa venda.</p>
       </div>
 
-      <div className={styles.calculatorPanel}>
-        <div className={styles.inputGroup}>
-          <label>Valor da Venda (R$)</label>
-          <input
-            type="number"
-            step="0.01"
-            placeholder="Ex: 500.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+      {/* AVISO SE NÃO TIVER MAQUININHA CADASTRADA */}
+      {machinesList.length === 0 ? (
+        <div className={styles.emptyState}>
+          <FiSettings size={40} color="#38bdf8" style={{ marginBottom: '16px' }} />
+          <h3>Nenhuma maquininha configurada</h3>
+          <p>Para o comparador funcionar, você precisa cadastrar as taxas reais das suas maquininhas.</p>
+          {/* Aqui você pode colocar um Link do react-router-dom apontando para a tela de configurações */}
         </div>
+      ) : (
+        <>
+          <div className={styles.calculatorPanel}>
+            <div className={styles.inputGroup}>
+              <label>Valor da Venda (R$)</label>
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Ex: 500.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
 
-        <div className={styles.controlsRow}>
-          <div className={styles.inputGroup}>
-            <label>Forma de Pagamento</label>
-            <select value={paymentType} onChange={(e) => setPaymentType(e.target.value)}>
-              <option value="debit">Débito</option>
-              <option value="credit">Crédito</option>
-            </select>
+            <div className={styles.controlsRow}>
+              <div className={styles.inputGroup}>
+                <label>Forma de Pagamento</label>
+                <select value={paymentType} onChange={(e) => setPaymentType(e.target.value)}>
+                  <option value="debit">Débito</option>
+                  <option value="credit">Crédito</option>
+                </select>
+              </div>
+
+              {paymentType === "credit" && (
+                <div className={styles.inputGroup}>
+                  <label>Parcelas</label>
+                  <select value={installments} onChange={(e) => setInstallments(Number(e.target.value))}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
+                      <option key={num} value={num}>{num}x</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
           </div>
 
-          {paymentType === "credit" && (
-            <div className={styles.inputGroup}>
-              <label>Parcelas</label>
-              <select value={installments} onChange={(e) => setInstallments(Number(e.target.value))}>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
-                  <option key={num} value={num}>{num}x</option>
-                ))}
-              </select>
+          {results && (
+            <div className={styles.resultsArea}>
+              
+              {/* CARD DE ECONOMIA - SÓ MOSTRA SE TIVER MAIS DE UMA MAQUININHA */}
+              {machinesList.length > 1 && results.maxSavings > 0 && (
+                <div className={styles.savingsAlert}>
+                  <div className={styles.savingsIcon}><FiTrendingUp /></div>
+                  <div>
+                    <p className={styles.savingsText}>
+                      Se você passar essa venda na <strong>{results.bestMachine.name}</strong> ao invés da {results.worstMachine.name}, você coloca <strong className={styles.highlight}>R$ {results.maxSavings.toFixed(2)}</strong> a mais no bolso agora!
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.rankingList}>
+                {results.list.map((item, index) => {
+                  const isWinner = index === 0;
+                  const isLoser = index === results.list.length - 1 && results.list.length > 1;
+
+                  return (
+                    <div key={item.id} className={`${styles.machineCard} ${isWinner ? styles.winnerCard : ''} ${isLoser ? styles.loserCard : ''}`}>
+                      
+                      <div className={styles.machineInfo}>
+                        <div className={styles.machineBadge} style={{ backgroundColor: item.color || '#38bdf8' }}></div>
+                        <div>
+                          <h4 className={styles.machineName}>{item.name}</h4>
+                          <span className={styles.rateUsed}>Taxa: {item.rateApplied.toFixed(2)}%</span>
+                        </div>
+                      </div>
+
+                      <div className={styles.machineValues}>
+                        <div className={styles.feeDiscount}>
+                          <span>Taxa:</span>
+                          <span className={styles.negativeValue}>- R$ {item.feeValue.toFixed(2)}</span>
+                        </div>
+                        <div className={styles.netAmount}>
+                          <span>Você recebe:</span>
+                          <strong className={isWinner ? styles.textGreen : ''}>
+                            R$ {item.netValue.toFixed(2)}
+                          </strong>
+                        </div>
+                      </div>
+
+                      {isWinner && machinesList.length > 1 && <div className={styles.winnerTag}>🏆 Melhor Opção</div>}
+                      {isLoser && <div className={styles.loserTag}><FiAlertCircle /> Pior Opção</div>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
-        </div>
-      </div>
-
-      {results && (
-        <div className={styles.resultsArea}>
-          {/* CARD DE ECONOMIA - O GATILHO MENTAL */}
-          <div className={styles.savingsAlert}>
-            <div className={styles.savingsIcon}><FiTrendingUp /></div>
-            <div>
-              <p className={styles.savingsText}>
-                Se você passar essa venda na <strong>{results.bestMachine.name}</strong> ao invés da {results.worstMachine.name}, você coloca <strong className={styles.highlight}>R$ {results.maxSavings.toFixed(2)}</strong> a mais no bolso agora!
-              </p>
-            </div>
-          </div>
-
-          <div className={styles.rankingList}>
-            {results.list.map((item, index) => {
-              const isWinner = index === 0;
-              const isLoser = index === results.list.length - 1;
-
-              return (
-                <div key={item.id} className={`${styles.machineCard} ${isWinner ? styles.winnerCard : ''} ${isLoser ? styles.loserCard : ''}`}>
-                  
-                  <div className={styles.machineInfo}>
-                    <div className={styles.machineBadge} style={{ backgroundColor: item.color }}></div>
-                    <div>
-                      <h4 className={styles.machineName}>{item.name}</h4>
-                      <span className={styles.rateUsed}>Taxa: {item.rateApplied.toFixed(2)}%</span>
-                    </div>
-                  </div>
-
-                  <div className={styles.machineValues}>
-                    <div className={styles.feeDiscount}>
-                      <span>Taxa:</span>
-                      <span className={styles.negativeValue}>- R$ {item.feeValue.toFixed(2)}</span>
-                    </div>
-                    <div className={styles.netAmount}>
-                      <span>Você recebe:</span>
-                      <strong className={isWinner ? styles.textGreen : ''}>
-                        R$ {item.netValue.toFixed(2)}
-                      </strong>
-                    </div>
-                  </div>
-
-                  {isWinner && <div className={styles.winnerTag}>🏆 Melhor Opção</div>}
-                  {isLoser && <div className={styles.loserTag}><FiAlertCircle /> Pior Opção</div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

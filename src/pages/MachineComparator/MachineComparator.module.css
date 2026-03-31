@@ -285,3 +285,23 @@
     justify-content: space-between;
   }
 }
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.emptyState h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.emptyState p {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.7);
+  font-size: 1rem;
+}

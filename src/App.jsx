@@ -19,6 +19,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import CaixaDiario from './pages/CaixaDiario/CaixaDiario';
 import ReversePricing from "./pages/ReversePricing/ReversePricing";
 import MachineComparator from "./pages/MachineComparator/MachineComparator";
+import MinhasTaxas from './pages/MinhasTaxas/MinhasTaxas';
 
 function App() {
   return (
@@ -74,6 +75,15 @@ function App() {
             element={
               <PrivateRoute>
                 <MachineComparator />
+              </PrivateRoute>
+            } 
+          />
+
+          <Route 
+            path='/taxas' 
+            element={
+              <PrivateRoute>
+                <MinhasTaxas />
               </PrivateRoute>
             } 
           />
