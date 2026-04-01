@@ -77,7 +77,7 @@ const Contact = () => {
               </div>
 
               <div className={styles.inputGroup}>
-                <label>E-mail Profissional</label>
+                <label>Seu E-mail</label>
                 <input type="email" name="from_email" placeholder="seu@email.com" required />
               </div>
             </div>
