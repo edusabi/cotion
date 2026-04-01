@@ -1,15 +1,12 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
-// 1. ADICIONE O IMPORT AQUI (junto com os outros das páginas)
-import Success from "./pages/Success/Success"; 
-
-///components
+// components
 import NavBar from "./components/NavBar/NavBar";
 import NotFound from "./components/Notfound/Notfound";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
-///pages
+// pages
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
@@ -20,11 +17,18 @@ import CaixaDiario from './pages/CaixaDiario/CaixaDiario';
 import ReversePricing from "./pages/ReversePricing/ReversePricing";
 import MachineComparator from "./pages/MachineComparator/MachineComparator";
 import Vitrine from "./pages/Vitrine/Vitrine";
+import Success from "./pages/Success/Success";
 
-function App() {
+
+// 🔥 ESSE CARA CONTROLA A NAVBAR
+function AppContent() {
+  const location = useLocation();
+
+  const esconderNavbar = location.pathname.startsWith("/vitrine");
+
   return (
-    <BrowserRouter>
-      <NavBar />
+    <>
+      {!esconderNavbar && <NavBar />}
 
       <Routes>
         <Route path='/' element={<Home />} />
@@ -34,7 +38,6 @@ function App() {
         <Route path='/registro' element={<Register />} />
         <Route path='/vitrine/:userId' element={<Vitrine />} />
 
-        {/* 2. ADICIONE A NOVA ROTA AQUI EMBAIXO DO DASHBOARD */}
         <Route 
           path='/sucesso' 
           element={
@@ -71,17 +74,27 @@ function App() {
           } 
         />
 
-          <Route 
-            path='/calculadora' 
-            element={
-              <PrivateRoute>
-                <MachineComparator />
-              </PrivateRoute>
-            } 
-          />
+        <Route 
+          path='/calculadora' 
+          element={
+            <PrivateRoute>
+              <MachineComparator />
+            </PrivateRoute>
+          } 
+        />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
+    </>
+  );
+}
+
+
+// 🔥 APP PRINCIPAL
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
