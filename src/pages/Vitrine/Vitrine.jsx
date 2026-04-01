@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { FiShoppingCart, FiMinus, FiPlus, FiSend, FiX } from "react-icons/fi";
+import { FiShoppingCart, FiMinus, FiPlus, FiSend, FiX, FiUser } from "react-icons/fi";
 import styles from "./Vitrine.module.css";
 
 const API_URL = "https://cotion.discloud.app";
 
 const Vitrine = () => {
-  const { userId } = useParams(); // slug
+  const { userId } = useParams();
   const [searchParams] = useSearchParams();
   const whatsappNumber = searchParams.get("w");
 
@@ -16,10 +16,10 @@ const Vitrine = () => {
   const [carrinho, setCarrinho] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // 🔥 NOVO ESTADO: Controla se o modal do carrinho está aberto ou fechado
   const [isCartOpen, setIsCartOpen] = useState(false);
+  // 🔥 NOVO ESTADO: Armazena o nome do cliente final
+  const [nomeCliente, setNomeCliente] = useState("");
 
-  // Se o carrinho esvaziar, fecha o modal automaticamente
   useEffect(() => {
     if (carrinho.length === 0) setIsCartOpen(false);
   }, [carrinho]);
@@ -28,7 +28,7 @@ const Vitrine = () => {
     const fetchVitrine = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/vitrine/${userId}`);
-        setProdutos(res.data.produtos || res.data); // Ajuste caso a API retorne direto o array
+        setProdutos(res.data.produtos || res.data);
         setLoja(res.data.loja || null);
       } catch (error) {
         console.error(error);
@@ -78,20 +78,31 @@ const Vitrine = () => {
     );
   };
 
+  // 🔥 NOVA FUNÇÃO MENSAGEM: Texto rico e profissional
   const enviar = () => {
-    if (!whatsappNumber) return alert("Sem WhatsApp configurado.");
+    if (!whatsappNumber) return alert("Erro: WhatsApp da loja não configurado.");
     if (carrinho.length === 0) return;
+    if (nomeCliente.trim() === "") return alert("Por favor, preencha o seu nome antes de enviar o pedido.");
 
     let total = 0;
-    let texto = "*🛍️ NOVO PEDIDO*\n\n";
+    
+    // Saudação personalizada
+    let texto = `Olá! Me chamo *${nomeCliente.trim()}* e vim pela vitrine digital.\n`;
+    texto += `Gostaria de fechar o pedido abaixo: 👇\n\n`;
+    texto += `*🛒 RESUMO DO PEDIDO:*\n`;
+    texto += `------------------------------------\n`;
 
+    // Lista de Itens
     carrinho.forEach(i => {
       const sub = i.preco * i.qtd;
       total += sub;
-      texto += `▪️ ${i.qtd}x *${i.nome || i.name}* - R$ ${sub.toFixed(2)}\n`;
+      texto += `▪️ ${i.qtd}x *${i.nome || i.name}*\n`;
+      texto += `   _Subtotal: R$ ${sub.toFixed(2).replace('.', ',')}_\n`;
     });
 
-    texto += `\n💰 TOTAL: R$ ${total.toFixed(2)}`;
+    texto += `------------------------------------\n`;
+    texto += `💰 *TOTAL A PAGAR: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
+    texto += `Como funciona para pagamento e envio/retirada? Fico no aguardo! 🚀`;
 
     window.open(
       `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(texto)}`
@@ -106,13 +117,11 @@ const Vitrine = () => {
   return (
     <div className={styles.container}>
 
-      {/* HERO / CABEÇALHO */}
       <header className={styles.hero}>
         <h1>{loja?.name || "Catálogo de Produtos"}</h1>
         <p>Escolha seus produtos e peça pelo WhatsApp 🚀</p>
       </header>
 
-      {/* GRID DE PRODUTOS */}
       <div className={styles.grid}>
         {produtos.length === 0 && (
           <p style={{ textAlign: "center", width: "100%", opacity: 0.5 }}>Nenhum produto encontrado</p>
@@ -143,10 +152,8 @@ const Vitrine = () => {
         })}
       </div>
 
-      {/* 🔥 SISTEMA DO CARRINHO (BOLINHA + MODAL) */}
       {carrinho.length > 0 && (
         <>
-          {/* BOLINHA FLUTUANTE (FAB) */}
           <button 
             className={styles.cartFab} 
             onClick={() => setIsCartOpen(true)}
@@ -155,11 +162,9 @@ const Vitrine = () => {
             <span className={styles.cartBadge}>{totalItens}</span>
           </button>
 
-          {/* MODAL DO CARRINHO */}
           {isCartOpen && (
             <div className={styles.cartModalOverlay} onClick={() => setIsCartOpen(false)}>
               
-              {/* Impede que o clique dentro do modal feche ele */}
               <div className={styles.cartModal} onClick={(e) => e.stopPropagation()}>
                 
                 <div className={styles.cartHeader}>
@@ -184,12 +189,27 @@ const Vitrine = () => {
                 </div>
 
                 <div className={styles.cartTotalRow}>
-                  <span>Total:</span>
+                  <span>Total do Pedido:</span>
                   <strong>R$ {totalCarrinho.toFixed(2)}</strong>
                 </div>
 
+                {/* 🔥 NOVO CAMPO: Identificação do Cliente */}
+                <div className={styles.identificacaoCliente}>
+                  <label htmlFor="nomeCliente">Como você se chama?</label>
+                  <div className={styles.inputWrapper}>
+                    <FiUser className={styles.inputIcon} />
+                    <input 
+                      id="nomeCliente"
+                      type="text" 
+                      placeholder="Ex: Maria da Silva" 
+                      value={nomeCliente}
+                      onChange={(e) => setNomeCliente(e.target.value)}
+                    />
+                  </div>
+                </div>
+
                 <button className={styles.btnFinal} onClick={enviar}>
-                  <FiSend /> Enviar Pedido
+                  <FiSend /> Concluir via WhatsApp
                 </button>
               </div>
             </div>

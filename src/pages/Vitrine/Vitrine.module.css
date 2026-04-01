@@ -1,7 +1,11 @@
+/* =========================================
+   ESTILOS DA VITRINE C/ MODAL E NOME DO CLIENTE
+   ========================================= */
+
 .container {
   max-width: 1100px;
   margin: auto;
-  padding: 20px 20px 100px 20px; /* Margem extra no final para não cobrir itens */
+  padding: 20px 20px 100px 20px;
   color: white;
   font-family: inherit;
 }
@@ -51,34 +55,39 @@
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
 /* IMG */
 .imgWrap {
-  height: 200px;
-  background: rgba(0,0,0,0.2);
+  height: 220px;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .imgWrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .imgWrap img {
+  transform: scale(1.05); /* Efeito zoom */
 }
 
 .noImg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
   font-size: 3rem;
   opacity: 0.2;
 }
 
 /* INFO */
 .info {
-  padding: 15px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -87,41 +96,40 @@
 .info h3 {
   margin: 0 0 10px 0;
   font-size: 1.1rem;
+  color: #f8fafc;
   flex: 1;
 }
 
 .price {
-  color: #22c55e;
+  color: #34d399; /* Verde neon */
   font-weight: 800;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   display: block;
   margin-bottom: 12px;
 }
 
-/* BUTTON */
+/* BUTTON COM GRADIETE SUTIL */
 .info button {
   width: 100%;
   padding: 12px;
-  background: #38bdf8;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   color: #0f172a;
   border: none;
   border-radius: 8px;
   font-weight: 800;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.2s, filter 0.2s;
+  font-size: 1rem;
 }
 
 .info button:hover {
-  background: #7dd3fc;
-  transform: scale(1.02);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
-
 /* =========================================
-   NOVO SISTEMA DE CARRINHO (BOLINHA + MODAL)
+   FAB (BOTÃO FLUTUANTE) E MODAL
    ========================================= */
-
-/* 1. A BOLINHA FLUTUANTE (FAB) */
 .cartFab {
   position: fixed;
   bottom: 24px;
@@ -143,7 +151,7 @@
 }
 
 .cartFab:hover {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
 .cartBadge {
@@ -160,10 +168,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #0f172a; /* Dá um recorte ao redor do badge */
+  border: 3px solid #0f172a;
 }
 
-/* 2. OVERLAY DO MODAL (Fundo escuro) */
 .cartModalOverlay {
   position: fixed;
   inset: 0;
@@ -171,20 +178,19 @@
   backdrop-filter: blur(5px);
   z-index: 1001;
   display: flex;
-  justify-content: flex-end; /* Alinha o modal para a direita */
-  align-items: flex-end;     /* Alinha o modal para baixo */
+  justify-content: flex-end;
+  align-items: flex-end;
   padding: 24px;
 }
 
-/* 3. A CAIXA DO MODAL */
 .cartModal {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6);
   animation: slideUpFade 0.3s ease-out;
   display: flex;
   flex-direction: column;
@@ -214,8 +220,8 @@
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -230,9 +236,8 @@
   color: #fff;
 }
 
-/* 4. LISTA DE ITENS DENTRO DO MODAL */
 .carrinhoItens {
-  max-height: 40vh; /* Se tiver muitos itens, ele rola só aqui dentro */
+  max-height: 35vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -288,28 +293,79 @@
   text-align: center;
 }
 
-/* 5. LINHA DO TOTAL E BOTÃO FINALIZAR */
 .cartTotalRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .cartTotalRow span {
-  color: #94a3b8;
-  font-size: 1.1rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .cartTotalRow strong {
-  color: #22c55e;
-  font-size: 1.4rem;
+  color: #34d399;
+  font-size: 1.3rem;
+}
+
+/* =========================================
+   FORMULÁRIO CLIENTE & ENVIO
+   ========================================= */
+.identificacaoCliente {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.identificacaoCliente label {
+  font-size: 0.9rem;
+  color: rgba(226, 232, 240, 0.8);
+  font-weight: bold;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.1rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.inputWrapper input:focus {
+  border-color: #38bdf8;
 }
 
 .btnFinal {
   width: 100%;
   padding: 16px;
-  background: #25D366; /* Verde do WhatsApp */
+  background: #25D366; 
   color: white;
   border: none;
   border-radius: 12px;
@@ -320,18 +376,19 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  transition: filter 0.2s;
+  transition: transform 0.2s, filter 0.2s;
 }
 
 .btnFinal:hover {
   filter: brightness(1.1);
+  transform: translateY(-2px);
 }
 
 /* RESPONSIVIDADE MOBILE DO CARRINHO */
 @media (max-width: 600px) {
   .cartModalOverlay {
     padding: 16px;
-    justify-content: center; /* Centraliza no mobile */
+    justify-content: center;
   }
   
   .cartModal {
