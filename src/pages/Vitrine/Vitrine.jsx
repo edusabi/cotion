@@ -15,26 +15,6 @@ const Vitrine = () => {
   const [carrinho, setCarrinho] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // =========================================================================
-  // 🔥 TRUQUE MÁGICO: Esconder a Navbar Global apenas nesta tela
-  // =========================================================================
-  useEffect(() => {
-    // Procura o menu pelo ID exato que colocamos lá na sua Navbar.
-    // DICA: Certifique-se de colocar id="menu-principal" na <div> principal do seu componente Navbar.jsx!
-    const navbarElement = document.getElementById('menu-principal'); 
-    
-    if (navbarElement) {
-      navbarElement.style.display = 'none'; // Esconde
-    }
-
-    return () => {
-      if (navbarElement) {
-        navbarElement.style.display = ''; // Mostra de volta ao sair
-      }
-    };
-  }, []);
-  // =========================================================================
-
   useEffect(() => {
     const fetchVitrine = async () => {
       try {
