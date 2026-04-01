@@ -262,20 +262,17 @@
   position: relative;
   width: 100%;
   max-width: 550px;
-  
-  /* CORREÇÃO 3: Isso centraliza o modal verticalmente se a tela for grande */
   margin: auto; 
-  
-  /* Mantemos um limite de altura para ele ter scroll interno elegante */
   max-height: 85vh; 
   overflow-y: auto; 
-  
   background: linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 20px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  
+  /* MUDE AQUI: Corrigindo a cor para o Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #38bdf8 transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
 .closeModal {
