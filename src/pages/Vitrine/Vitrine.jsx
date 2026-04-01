@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { FiMinus, FiPlus, FiSend } from "react-icons/fi";
+import { FiShoppingCart, FiMinus, FiPlus, FiSend, FiX } from "react-icons/fi";
 import styles from "./Vitrine.module.css";
 
 const API_URL = "https://cotion.discloud.app";
@@ -15,13 +15,21 @@ const Vitrine = () => {
   const [loja, setLoja] = useState(null);
   const [carrinho, setCarrinho] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // 🔥 NOVO ESTADO: Controla se o modal do carrinho está aberto ou fechado
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Se o carrinho esvaziar, fecha o modal automaticamente
+  useEffect(() => {
+    if (carrinho.length === 0) setIsCartOpen(false);
+  }, [carrinho]);
 
   useEffect(() => {
     const fetchVitrine = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/vitrine/${userId}`);
-        setProdutos(res.data.produtos);
-        setLoja(res.data.loja);
+        setProdutos(res.data.produtos || res.data); // Ajuste caso a API retorne direto o array
+        setLoja(res.data.loja || null);
       } catch (error) {
         console.error(error);
       } finally {
@@ -46,7 +54,6 @@ const Vitrine = () => {
 
   const adicionar = (prod) => {
     const preco = calcularPreco(prod);
-
     const existe = carrinho.find(i => i.id === prod.id);
 
     if (existe) {
@@ -72,7 +79,7 @@ const Vitrine = () => {
   };
 
   const enviar = () => {
-    if (!whatsappNumber) return alert("Sem WhatsApp");
+    if (!whatsappNumber) return alert("Sem WhatsApp configurado.");
     if (carrinho.length === 0) return;
 
     let total = 0;
@@ -81,7 +88,7 @@ const Vitrine = () => {
     carrinho.forEach(i => {
       const sub = i.preco * i.qtd;
       total += sub;
-      texto += `▪️ ${i.qtd}x *${i.nome}* - R$ ${sub.toFixed(2)}\n`;
+      texto += `▪️ ${i.qtd}x *${i.nome || i.name}* - R$ ${sub.toFixed(2)}\n`;
     });
 
     texto += `\n💰 TOTAL: R$ ${total.toFixed(2)}`;
@@ -91,44 +98,43 @@ const Vitrine = () => {
     );
   };
 
+  const totalCarrinho = carrinho.reduce((acc, item) => acc + (item.preco * item.qtd), 0);
+  const totalItens = carrinho.reduce((acc, item) => acc + item.qtd, 0);
+
   if (loading) return <div className={styles.loading}>Carregando...</div>;
 
   return (
     <div className={styles.container}>
 
-      {/* HEADER BONITO */}
-      <header className={styles.header}>
-        <h1>{loja?.name || "Loja"}</h1>
-        <p>Escolha seus produtos e peça pelo WhatsApp</p>
+      {/* HERO / CABEÇALHO */}
+      <header className={styles.hero}>
+        <h1>{loja?.name || "Catálogo de Produtos"}</h1>
+        <p>Escolha seus produtos e peça pelo WhatsApp 🚀</p>
       </header>
 
-      {/* GRID CORRETO */}
-      <div className={styles.gridProdutos}>
+      {/* GRID DE PRODUTOS */}
+      <div className={styles.grid}>
         {produtos.length === 0 && (
-          <p className={styles.vazio}>Nenhum produto encontrado</p>
+          <p style={{ textAlign: "center", width: "100%", opacity: 0.5 }}>Nenhum produto encontrado</p>
         )}
 
         {produtos.map(p => {
           const preco = calcularPreco(p);
-
           return (
-            <div key={p.id} className={styles.cardProduto}>
-              <div className={styles.imgContainer}>
+            <div key={p.id} className={styles.card}>
+              <div className={styles.imgWrap}>
                 {p.foto
-                  ? <img src={p.foto} alt={p.nome} />
-                  : <div className={styles.semFoto}>📷</div>}
+                  ? <img src={p.foto} alt={p.nome || p.name} />
+                  : <div className={styles.noImg}>📷</div>}
               </div>
 
-              <div className={styles.infoProduto}>
-                <h3>{p.nome}</h3>
-                <span className={styles.preco}>
+              <div className={styles.info}>
+                <h3>{p.nome || p.name}</h3>
+                <span className={styles.price}>
                   R$ {preco.toFixed(2)}
                 </span>
 
-                <button
-                  className={styles.btnComprar}
-                  onClick={() => adicionar(p)}
-                >
+                <button onClick={() => adicionar(p)}>
                   Adicionar
                 </button>
               </div>
@@ -137,37 +143,58 @@ const Vitrine = () => {
         })}
       </div>
 
-      {/* CARRINHO */}
+      {/* 🔥 SISTEMA DO CARRINHO (BOLINHA + MODAL) */}
       {carrinho.length > 0 && (
-        <div className={styles.carrinhoFloat}>
-          <div className={styles.carrinhoHeader}>
-            <h3>🛒 Carrinho</h3>
-          </div>
+        <>
+          {/* BOLINHA FLUTUANTE (FAB) */}
+          <button 
+            className={styles.cartFab} 
+            onClick={() => setIsCartOpen(true)}
+          >
+            <FiShoppingCart />
+            <span className={styles.cartBadge}>{totalItens}</span>
+          </button>
 
-          <div className={styles.carrinhoItens}>
-            {carrinho.map(i => (
-              <div key={i.id} className={styles.carrinhoItem}>
-                <span className={styles.itemNome}>{i.nome}</span>
-
-                <div className={styles.controlesQtd}>
-                  <button onClick={() => alterar(i.id, -1)}>
-                    <FiMinus />
-                  </button>
-
-                  <span>{i.qtd}</span>
-
-                  <button onClick={() => alterar(i.id, 1)}>
-                    <FiPlus />
+          {/* MODAL DO CARRINHO */}
+          {isCartOpen && (
+            <div className={styles.cartModalOverlay} onClick={() => setIsCartOpen(false)}>
+              
+              {/* Impede que o clique dentro do modal feche ele */}
+              <div className={styles.cartModal} onClick={(e) => e.stopPropagation()}>
+                
+                <div className={styles.cartHeader}>
+                  <h3>🛒 Seu Pedido</h3>
+                  <button className={styles.closeCartBtn} onClick={() => setIsCartOpen(false)}>
+                    <FiX />
                   </button>
                 </div>
-              </div>
-            ))}
-          </div>
 
-          <button className={styles.btnFinalizar} onClick={enviar}>
-            <FiSend /> Enviar Pedido
-          </button>
-        </div>
+                <div className={styles.carrinhoItens}>
+                  {carrinho.map(i => (
+                    <div key={i.id} className={styles.cartItem}>
+                      <span className={styles.itemNome}>{i.nome || i.name}</span>
+
+                      <div className={styles.controlesQtd}>
+                        <button onClick={() => alterar(i.id, -1)}><FiMinus /></button>
+                        <span>{i.qtd}</span>
+                        <button onClick={() => alterar(i.id, 1)}><FiPlus /></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.cartTotalRow}>
+                  <span>Total:</span>
+                  <strong>R$ {totalCarrinho.toFixed(2)}</strong>
+                </div>
+
+                <button className={styles.btnFinal} onClick={enviar}>
+                  <FiSend /> Enviar Pedido
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
