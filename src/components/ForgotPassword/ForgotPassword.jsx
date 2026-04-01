@@ -10,7 +10,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     try {
       // Chame a rota do seu backend que criamos acima
-      await axios.post("/api/forgot-password", { email });
+      await axios.post("/auth/forgot_password", { email });
       setMessage("Verifique sua caixa de entrada!");
     } catch (err) {
       setMessage("Erro ao enviar e-mail. Tente novamente.");
