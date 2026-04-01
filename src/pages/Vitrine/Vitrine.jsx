@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { FiShoppingCart, FiMinus, FiPlus, FiSend } from "react-icons/fi";
+import { FiMinus, FiPlus, FiSend } from "react-icons/fi";
 import styles from "./Vitrine.module.css";
 
 const API_URL = "https://cotion.discloud.app";
 
 const Vitrine = () => {
-  const { userId } = useParams();
+  const { userId } = useParams(); // agora é SLUG
   const [searchParams] = useSearchParams();
   const whatsappNumber = searchParams.get("w");
 
   const [produtos, setProdutos] = useState([]);
+  const [loja, setLoja] = useState(null);
   const [carrinho, setCarrinho] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,124 +20,111 @@ const Vitrine = () => {
     const fetchVitrine = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/vitrine/${userId}`);
-        setProdutos(res.data);
+        setProdutos(res.data.produtos);
+        setLoja(res.data.loja);
       } catch (error) {
-        console.error("Erro ao carregar vitrine", error);
+        console.error("Erro:", error);
       } finally {
         setLoading(false);
       }
     };
-    if (userId) fetchVitrine();
+
+    fetchVitrine();
   }, [userId]);
 
-  const calcularPrecoSugerido = (prod) => {
+  const calcularPreco = (prod) => {
     const custo = prod.custo_raw / 100;
     const frete = prod.frete_raw / 100;
     const taxas = Number(prod.taxas) || 0;
     const margem = Number(prod.margem) || 0;
+
     const divisor = 1 - ((taxas + margem) / 100);
     if (divisor <= 0) return 0;
+
     return (custo + frete) / divisor;
   };
 
-  const adicionarAoCarrinho = (produto) => {
-    const preco = calcularPrecoSugerido(produto);
-    const itemExistente = carrinho.find((item) => item.id === produto.id);
+  const adicionar = (prod) => {
+    const preco = calcularPreco(prod);
 
-    if (itemExistente) {
-      setCarrinho(carrinho.map(item => item.id === produto.id ? { ...item, qtd: item.qtd + 1 } : item));
+    const existe = carrinho.find(i => i.id === prod.id);
+
+    if (existe) {
+      setCarrinho(carrinho.map(i =>
+        i.id === prod.id ? { ...i, qtd: i.qtd + 1 } : i
+      ));
     } else {
-      setCarrinho([...carrinho, { ...produto, precoReal: preco, qtd: 1 }]);
+      setCarrinho([...carrinho, { ...prod, preco, qtd: 1 }]);
     }
   };
 
-  const alterarQuantidade = (id, delta) => {
-    setCarrinho(carrinho.map(item => {
-      if (item.id === id) {
-        const novaQtd = item.qtd + delta;
-        return novaQtd > 0 ? { ...item, qtd: novaQtd } : null;
-      }
-      return item;
-    }).filter(Boolean));
+  const alterar = (id, delta) => {
+    setCarrinho(carrinho
+      .map(i => {
+        if (i.id === id) {
+          const q = i.qtd + delta;
+          return q > 0 ? { ...i, qtd: q } : null;
+        }
+        return i;
+      })
+      .filter(Boolean)
+    );
   };
 
-  const enviarPedidoWhatsApp = () => {
-    if (!whatsappNumber) return alert("Número de WhatsApp da loja não encontrado.");
+  const enviar = () => {
+    if (!whatsappNumber) return alert("Sem WhatsApp");
     if (carrinho.length === 0) return;
 
     let total = 0;
-    let textoPedido = `*🛍️ NOVO PEDIDO - VITRINE*\n\n`;
+    let texto = "*🛍️ NOVO PEDIDO*\n\n";
 
-    carrinho.forEach((item) => {
-      const subtotal = item.precoReal * item.qtd;
-      total += subtotal;
-      // Puxando a propriedade correta: item.name
-      textoPedido += `▪️ ${item.qtd}x *${item.name}* - R$ ${subtotal.toFixed(2)}\n`;
+    carrinho.forEach(i => {
+      const sub = i.preco * i.qtd;
+      total += sub;
+      texto += `▪️ ${i.qtd}x *${i.name}* - R$ ${sub.toFixed(2)}\n`;
     });
 
-    textoPedido += `\n💰 *TOTAL DO PEDIDO: R$ ${total.toFixed(2)}*\n\n`;
-    textoPedido += `Olá! Gostaria de finalizar este pedido. Como podemos seguir com o pagamento e entrega?`;
+    texto += `\n💰 TOTAL: R$ ${total.toFixed(2)}`;
 
-    const textoCodificado = encodeURIComponent(textoPedido);
-    window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${textoCodificado}`, "_blank");
+    window.open(
+      `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(texto)}`
+    );
   };
 
-  const totalCarrinho = carrinho.reduce((acc, item) => acc + (item.precoReal * item.qtd), 0);
-  const totalItens = carrinho.reduce((acc, item) => acc + item.qtd, 0);
-
-  if (loading) return <div className={styles.loading}>Carregando catálogo...</div>;
+  if (loading) return <div>Carregando...</div>;
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>Catálogo de Produtos</h1>
-        <p>Escolha seus itens e faça o pedido direto pelo WhatsApp</p>
-      </header>
+      <h1>{loja?.name || "Loja"}</h1>
 
-      <div className={styles.gridProdutos}>
-        {produtos.map(prod => {
-          const preco = calcularPrecoSugerido(prod);
+      <div className={styles.grid}>
+        {produtos.map(p => {
+          const preco = calcularPreco(p);
+
           return (
-            <div key={prod.id} className={styles.cardProduto}>
-              <div className={styles.imgContainer}>
-                {/* Puxando a propriedade correta: prod.name */}
-                {prod.foto ? <img src={prod.foto} alt={prod.name} /> : <div className={styles.semFoto}>📷</div>}
-              </div>
-              <div className={styles.infoProduto}>
-                {/* Puxando a propriedade correta: prod.name */}
-                <h3>{prod.name}</h3>
-                <span className={styles.preco}>R$ {preco.toFixed(2)}</span>
-                <button onClick={() => adicionarAoCarrinho(prod)} className={styles.btnComprar}>
-                  Adicionar
-                </button>
-              </div>
+            <div key={p.id} className={styles.card}>
+              {p.foto && <img src={p.foto} alt={p.name} />}
+              <h3>{p.name}</h3>
+              <p>R$ {preco.toFixed(2)}</p>
+              <button onClick={() => adicionar(p)}>Adicionar</button>
             </div>
           );
         })}
-        {produtos.length === 0 && <p className={styles.vazio}>Nenhum produto cadastrado no momento.</p>}
       </div>
 
       {carrinho.length > 0 && (
-        <div className={styles.carrinhoFloat}>
-          <div className={styles.carrinhoHeader}>
-            <h3>🛒 Seu Carrinho ({totalItens})</h3>
-            <span>Total: <strong>R$ {totalCarrinho.toFixed(2)}</strong></span>
-          </div>
-          <div className={styles.carrinhoItens}>
-            {carrinho.map(item => (
-              <div key={item.id} className={styles.carrinhoItem}>
-                {/* Puxando a propriedade correta: item.name */}
-                <span className={styles.itemNome}>{item.name}</span>
-                <div className={styles.controlesQtd}>
-                  <button onClick={() => alterarQuantidade(item.id, -1)}><FiMinus /></button>
-                  <span>{item.qtd}</span>
-                  <button onClick={() => alterarQuantidade(item.id, 1)}><FiPlus /></button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button onClick={enviarPedidoWhatsApp} className={styles.btnFinalizar}>
-            <FiSend /> Enviar Pedido por WhatsApp
+        <div className={styles.carrinho}>
+          {carrinho.map(i => (
+            <div key={i.id}>
+              <span>{i.name}</span>
+              <button onClick={() => alterar(i.id, -1)}><FiMinus /></button>
+              <span>{i.qtd}</span>
+              <button onClick={() => alterar(i.id, 1)}><FiPlus /></button>
+            </div>
+          ))}
+
+          <button onClick={enviar}>
+            <FiSend /> Enviar Pedido
           </button>
         </div>
       )}

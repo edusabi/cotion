@@ -60,18 +60,36 @@ const Dashboard = () => {
   };
 
   // 🔥 NOVA FUNÇÃO: Gerar Link da Vitrine Pública
-  const gerarLinkVitrine = () => {
-    if (!user?.id) return alert("Erro: ID do usuário não encontrado.");
-    
-    const zap = prompt("📱 Digite o WhatsApp da sua loja com DDD (Ex: 81999998888):");
+  const gerarLinkVitrine = async () => {
+  try {
+    if (!user?.id) return alert("Erro: usuário não carregado.");
+
+    // cria slug se não existir
+    if (!user.slug) {
+      const res = await axios.post(`${API_URL}/api/create-slug`, {
+        userId: user.id,
+        nome: user.name
+      });
+
+      setUser(res.data);
+    }
+
+    const zap = prompt("📱 Digite o WhatsApp (Ex: 81999998888):");
     if (!zap) return;
-    
+
     const apenasNumeros = zap.replace(/\D/g, "");
-    const link = `${window.location.origin}/vitrine/${user.id}?w=55${apenasNumeros}`;
-    
+
+    const link = `${window.location.origin}/vitrine/${user.slug}?w=55${apenasNumeros}`;
+
     navigator.clipboard.writeText(link);
-    alert("✅ Link copiado com sucesso!\n\nEnvie para seus clientes ou coloque na bio do Instagram:\n" + link);
-  };
+
+    alert("✅ Link copiado:\n\n" + link);
+
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao gerar link");
+  }
+};
 
   // 🔥 NOVA FUNÇÃO: Enviar Orçamento Rápido via WhatsApp
   const enviarParaWhatsApp = (prod) => {
