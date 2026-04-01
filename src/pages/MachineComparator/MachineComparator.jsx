@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { FiDollarSign, FiTrendingUp, FiSettings, FiX, FiTrash2 } from "react-icons/fi";
+import { FiDollarSign, FiTrendingUp, FiAlertCircle, FiSettings, FiX, FiTrash2 } from "react-icons/fi";
 import styles from "./MachineComparator.module.css";
 import modalStyles from "./MinhasTaxas.module.css"; 
 
@@ -38,17 +38,17 @@ const MachineComparator = () => {
       setFormData({ name: "", color: "#38bdf8", debit: "", credit_1x: "", credit_2x: "", credit_6x: "", credit_10x: "", credit_12x: "" });
       fetchMachines();
     } catch (err) {
-      alert("Erro ao salvar maquininha.");
+      console.error("Erro ao salvar", err);
     }
   };
 
   const handleDeleteMachine = async (id) => {
-    if(!window.confirm("Deseja remover esta maquininha?")) return;
+    if(!window.confirm("Excluir esta maquininha?")) return;
     try {
       await axios.delete(`https://cotion.discloud.app/machines/${id}`, { withCredentials: true });
       fetchMachines();
     } catch (err) {
-      alert("Erro ao excluir.");
+      console.error("Erro ao deletar", err);
     }
   };
 
@@ -75,10 +75,14 @@ const MachineComparator = () => {
       return { ...machine, rateApplied: currentRate, feeValue, netValue };
     });
 
-    return calculations.sort((a, b) => b.netValue - a.netValue);
+    const sortedCalculations = calculations.sort((a, b) => b.netValue - a.netValue);
+    return { 
+      list: sortedCalculations, 
+      bestMachine: sortedCalculations[0], 
+      worstMachine: sortedCalculations[sortedCalculations.length - 1],
+      maxSavings: sortedCalculations.length > 1 ? sortedCalculations[0].netValue - sortedCalculations[sortedCalculations.length - 1].netValue : 0
+    };
   }, [amount, paymentType, installments, machinesList]);
-
-  if (loading) return <div className={styles.container}>Carregando comparador...</div>;
 
   return (
     <div className={styles.container}>
@@ -89,67 +93,83 @@ const MachineComparator = () => {
             <FiSettings />
           </button>
         </div>
-        <p>Economize taxas escolhendo a melhor opção.</p>
+        <p>Descubra em qual maquininha você ganha mais.</p>
       </div>
 
-      {/* MODAL DE CONFIGURAÇÃO */}
+      {/* MODAL COMPLETO E CENTRALIZADO */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <button className={styles.closeModal} onClick={() => setIsModalOpen(false)}><FiX /></button>
+            
             <div className={modalStyles.container}>
-               <div className={modalStyles.header}>
-                 <h2>Minhas Taxas</h2>
-                 <p>Configure seu contrato real abaixo.</p>
-               </div>
-               
-               <form onSubmit={handleSubmitTaxas} className={modalStyles.form}>
-                 <div className={modalStyles.mainInputs}>
-                   <div className={modalStyles.inputGroup}>
-                     <label>Maquininha</label>
-                     <input type="text" placeholder="Ex: Stone" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-                   </div>
-                   <div className={modalStyles.inputGroup}>
-                     <label>Cor</label>
-                     <input type="color" value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} />
-                   </div>
-                 </div>
+              <div className={modalStyles.header}>
+                <h2>Minhas Taxas</h2>
+                <p>Configure as taxas do seu contrato.</p>
+              </div>
 
-                 <div className={modalStyles.ratesGrid}>
-                   <div className={modalStyles.inputGroup}><label>Débito %</label><input type="number" step="0.01" value={formData.debit} onChange={e => setFormData({...formData, debit: e.target.value})} required /></div>
-                   <div className={modalStyles.inputGroup}><label>1x %</label><input type="number" step="0.01" value={formData.credit_1x} onChange={e => setFormData({...formData, credit_1x: e.target.value})} required /></div>
-                   <div className={modalStyles.inputGroup}><label>2x %</label><input type="number" step="0.01" value={formData.credit_2x} onChange={e => setFormData({...formData, credit_2x: e.target.value})} required /></div>
-                   <div className={modalStyles.inputGroup}><label>6x %</label><input type="number" step="0.01" value={formData.credit_6x} onChange={e => setFormData({...formData, credit_6x: e.target.value})} required /></div>
-                   <div className={modalStyles.inputGroup}><label>10x %</label><input type="number" step="0.01" value={formData.credit_10x} onChange={e => setFormData({...formData, credit_10x: e.target.value})} required /></div>
-                   <div className={modalStyles.inputGroup}><label>12x %</label><input type="number" step="0.01" value={formData.credit_12x} onChange={e => setFormData({...formData, credit_12x: e.target.value})} required /></div>
-                 </div>
-                 <button type="submit" className={modalStyles.button}>Salvar Nova Maquininha</button>
-               </form>
+              <form onSubmit={handleSubmitTaxas} className={modalStyles.form}>
+                <div className={modalStyles.mainInputs}>
+                  <div className={modalStyles.inputGroup}>
+                    <label>Nome da Maquininha</label>
+                    <input type="text" placeholder="Stone, Ton..." value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                  </div>
+                  <div className={modalStyles.inputGroup}>
+                    <label>Cor</label>
+                    <input type="color" value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} />
+                  </div>
+                </div>
 
-               <div className={modalStyles.listSection}>
-                 <h3>Ativas</h3>
-                 <div className={modalStyles.machinesList}>
-                   {machinesList.map(m => (
-                     <div key={m.id} className={modalStyles.machineCard}>
-                       <div className={modalStyles.machineInfo}>
-                         <div className={modalStyles.machineBadge} style={{ backgroundColor: m.color }}></div>
-                         <span>{m.name}</span>
-                       </div>
-                       <button onClick={() => handleDeleteMachine(m.id)} className={modalStyles.deleteBtn}><FiTrash2 /></button>
-                     </div>
-                   ))}
-                 </div>
-               </div>
+                <div className={modalStyles.ratesGrid}>
+                  <div className={modalStyles.inputGroup}><label>Débito %</label>
+                    <input type="number" step="0.01" value={formData.debit} onChange={e => setFormData({...formData, debit: e.target.value})} required />
+                  </div>
+                  <div className={modalStyles.inputGroup}><label>Crédito 1x %</label>
+                    <input type="number" step="0.01" value={formData.credit_1x} onChange={e => setFormData({...formData, credit_1x: e.target.value})} required />
+                  </div>
+                  <div className={modalStyles.inputGroup}><label>Crédito 2x %</label>
+                    <input type="number" step="0.01" value={formData.credit_2x} onChange={e => setFormData({...formData, credit_2x: e.target.value})} required />
+                  </div>
+                  <div className={modalStyles.inputGroup}><label>Crédito 6x %</label>
+                    <input type="number" step="0.01" value={formData.credit_6x} onChange={e => setFormData({...formData, credit_6x: e.target.value})} required />
+                  </div>
+                  <div className={modalStyles.inputGroup}><label>Crédito 10x %</label>
+                    <input type="number" step="0.01" value={formData.credit_10x} onChange={e => setFormData({...formData, credit_10x: e.target.value})} required />
+                  </div>
+                  <div className={modalStyles.inputGroup}><label>Crédito 12x %</label>
+                    <input type="number" step="0.01" value={formData.credit_12x} onChange={e => setFormData({...formData, credit_12x: e.target.value})} required />
+                  </div>
+                </div>
+                <button type="submit" className={modalStyles.button}>Salvar Nova Maquininha</button>
+              </form>
+
+              <div className={modalStyles.listSection}>
+                <h3>Maquininhas Ativas</h3>
+                <div className={modalStyles.machinesList}>
+                  {machinesList.map(m => (
+                    <div key={m.id} className={modalStyles.machineCard}>
+                      <div className={modalStyles.machineInfo}>
+                        <div className={modalStyles.machineBadge} style={{ backgroundColor: m.color }}></div>
+                        <div>
+                          <h4>{m.name}</h4>
+                          <small>Débito: {m.debit}% | 12x: {m.credit_12x}%</small>
+                        </div>
+                      </div>
+                      <button onClick={() => handleDeleteMachine(m.id)} className={modalStyles.deleteBtn}><FiTrash2 /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* TELA PRINCIPAL */}
+      {/* PAINEL DE CÁLCULO PRINCIPAL */}
       {machinesList.length === 0 ? (
         <div className={styles.emptyState}>
           <FiSettings size={40} color="#38bdf8" />
-          <p>Clique na engrenagem acima para configurar suas taxas.</p>
+          <p>Configure suas maquininhas na engrenagem acima.</p>
         </div>
       ) : (
         <>
@@ -163,7 +183,7 @@ const MachineComparator = () => {
                 <label>Pagamento</label>
                 <select value={paymentType} onChange={(e) => setPaymentType(e.target.value)}>
                   <option value="debit">Débito</option>
-                  <option value="credit">Crédito</option>
+                  <option value="credit">Crédito Parcelado</option>
                 </select>
               </div>
               {paymentType === "credit" && (
@@ -179,8 +199,16 @@ const MachineComparator = () => {
 
           {results && (
             <div className={styles.resultsArea}>
+              {results.maxSavings > 0 && (
+                <div className={styles.savingsAlert}>
+                  <FiTrendingUp className={styles.savingsIcon} />
+                  <p className={styles.savingsText}>
+                    Economia de <strong>R$ {results.maxSavings.toFixed(2)}</strong> usando {results.bestMachine.name}
+                  </p>
+                </div>
+              )}
               <div className={styles.rankingList}>
-                {results.map((item, index) => (
+                {results.list.map((item, index) => (
                   <div key={item.id} className={`${styles.machineCard} ${index === 0 ? styles.winnerCard : ''}`}>
                     <div className={styles.machineInfo}>
                       <div className={styles.machineBadge} style={{ backgroundColor: item.color }}></div>
