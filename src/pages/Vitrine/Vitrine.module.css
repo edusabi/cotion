@@ -1,132 +1,310 @@
+/* =========================================
+   ESTILOS GERAIS (CONTAINER E CABEÇALHO)
+   ========================================= */
 .container {
   max-width: 1100px;
-  margin: auto;
-  padding: 20px;
-  color: white;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 120px 1.5rem; /* Espaço embaixo para o carrinho não cobrir os itens */
+  color: #ffffff;
+  font-family: inherit;
 }
 
-/* HERO */
-.hero {
+.header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 3rem;
+  background: linear-gradient(140deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.4));
+  padding: 2.5rem 1rem;
+  border-radius: 24px;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  backdrop-filter: blur(10px);
 }
 
-.hero h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
+.header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  color: #fff;
 }
 
-.hero p {
+.header p {
   opacity: 0.7;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
-/* GRID */
-.grid {
+/* =========================================
+   GRID E CARDS DE PRODUTOS
+   ========================================= */
+.gridProdutos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  /* Cria colunas que se adaptam sozinhas. Mínimo de 240px de largura */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
 }
 
-/* CARD */
-.card {
-  background: #0f172a;
-  border-radius: 16px;
+.cardProduto {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
   overflow: hidden;
-  transition: 0.2s;
-  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.card:hover {
-  transform: translateY(-5px);
+.cardProduto:hover {
+  transform: translateY(-8px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* IMG */
-.imgWrap {
-  height: 180px;
-}
-
-.imgWrap img {
+.imgContainer {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.noImg {
+  height: 220px;
+  background: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  overflow: hidden;
 }
 
-/* INFO */
-.info {
-  padding: 15px;
-}
-
-.info h3 {
-  margin-bottom: 10px;
-}
-
-.price {
-  color: #22c55e;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
-}
-
-/* BUTTON */
-.info button {
+.imgContainer img {
   width: 100%;
-  padding: 10px;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cardProduto:hover .imgContainer img {
+  transform: scale(1.05); /* Efeito de zoom na foto ao passar o mouse */
+}
+
+.semFoto {
+  font-size: 3rem;
+  opacity: 0.2;
+}
+
+.infoProduto {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.infoProduto h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  color: #f8fafc;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.preco {
+  color: #34d399; /* Verde financeiro premium */
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+}
+
+.btnComprar {
+  width: 100%;
+  padding: 12px;
   background: #38bdf8;
+  color: #0f172a;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1rem;
   cursor: pointer;
+  transition: all 0.2s;
+  margin-top: auto; /* Empurra o botão pro fundo do card */
 }
 
-.info button:hover {
-  opacity: 0.8;
+.btnComprar:hover {
+  background: #7dd3fc;
+  transform: scale(1.02);
 }
 
-/* CART */
-.cart {
+.vazio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.1rem;
+}
+
+/* =========================================
+   CARRINHO FLUTUANTE NO RODAPÉ
+   ========================================= */
+.carrinhoFloat {
   position: fixed;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
-  max-width: 500px;
-  background: #020617;
-  padding: 20px;
-  border-radius: 16px;
+  max-width: 480px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cartHeader {
+@keyframes slideUp {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.carrinhoHeader {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.cartItem {
+.carrinhoHeader h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.carrinhoHeader span {
+  color: #34d399;
+  font-size: 1.2rem;
+}
+
+.carrinhoItens {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 5px;
+  /* Scrollbar customizada e bonita */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.carrinhoItem {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 12px 16px;
+  border-radius: 12px;
 }
 
-.cartItem button {
+.itemNome {
+  color: #e2e8f0;
+  font-weight: 500;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50%;
+}
+
+.controlesQtd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.controlesQtd button {
   background: none;
   border: none;
-  color: white;
+  color: #38bdf8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 
-/* FINAL BUTTON */
-.btnFinal {
-  width: 100%;
-  padding: 12px;
-  background: #25D366;
-  border: none;
-  border-radius: 10px;
+.controlesQtd span {
   font-weight: bold;
-  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.btnFinalizar {
+  width: 100%;
+  padding: 16px;
+  background: #25D366; /* Verde oficial WhatsApp */
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnFinalizar:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   MEDIA QUERIES (CELULARES)
+   ========================================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem 140px 1rem;
+  }
+
+  .header {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .gridProdutos {
+    /* No celular, tenta forçar 2 itens lado a lado se couber (mínimo 150px) */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .imgContainer {
+    height: 160px; /* Foto um pouco menor no celular */
+  }
+
+  .infoProduto {
+    padding: 1rem;
+  }
+
+  .infoProduto h3 {
+    font-size: 1rem;
+  }
+
+  .preco {
+    font-size: 1.2rem;
+  }
+
+  .btnComprar {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .carrinhoFloat {
+    width: 95%;
+    bottom: 16px;
+    padding: 20px 16px;
+  }
 }
