@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { FiMinus, FiPlus, FiSend } from "react-icons/fi";
+import { FiMinus, FiPlus, FiSend, FiShoppingCart } from "react-icons/fi";
 import styles from "./Vitrine.module.css";
 
 const API_URL = "https://cotion.discloud.app";
 
 const Vitrine = () => {
-  const { userId } = useParams(); // slug
+  const { userId } = useParams();
   const [searchParams] = useSearchParams();
   const whatsappNumber = searchParams.get("w");
 
@@ -17,26 +17,26 @@ const Vitrine = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchVitrine = async () => {
+    const fetch = async () => {
       try {
         const res = await axios.get(`${API_URL}/api/vitrine/${userId}`);
         setProdutos(res.data.produtos);
         setLoja(res.data.loja);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVitrine();
+    fetch();
   }, [userId]);
 
-  const calcularPreco = (prod) => {
-    const custo = prod.custo_raw / 100;
-    const frete = prod.frete_raw / 100;
-    const taxas = Number(prod.taxas) || 0;
-    const margem = Number(prod.margem) || 0;
+  const calcularPreco = (p) => {
+    const custo = p.custo_raw / 100;
+    const frete = p.frete_raw / 100;
+    const taxas = Number(p.taxas) || 0;
+    const margem = Number(p.margem) || 0;
 
     const divisor = 1 - ((taxas + margem) / 100);
     if (divisor <= 0) return 0;
@@ -44,17 +44,16 @@ const Vitrine = () => {
     return (custo + frete) / divisor;
   };
 
-  const adicionar = (prod) => {
-    const preco = calcularPreco(prod);
-
-    const existe = carrinho.find(i => i.id === prod.id);
+  const adicionar = (p) => {
+    const preco = calcularPreco(p);
+    const existe = carrinho.find(i => i.id === p.id);
 
     if (existe) {
       setCarrinho(carrinho.map(i =>
-        i.id === prod.id ? { ...i, qtd: i.qtd + 1 } : i
+        i.id === p.id ? { ...i, qtd: i.qtd + 1 } : i
       ));
     } else {
-      setCarrinho([...carrinho, { ...prod, preco, qtd: 1 }]);
+      setCarrinho([...carrinho, { ...p, preco, qtd: 1 }]);
     }
   };
 
@@ -73,7 +72,6 @@ const Vitrine = () => {
 
   const enviar = () => {
     if (!whatsappNumber) return alert("Sem WhatsApp");
-    if (carrinho.length === 0) return;
 
     let total = 0;
     let texto = "*🛍️ NOVO PEDIDO*\n\n";
@@ -86,50 +84,41 @@ const Vitrine = () => {
 
     texto += `\n💰 TOTAL: R$ ${total.toFixed(2)}`;
 
-    window.open(
-      `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(texto)}`
-    );
+    window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(texto)}`);
   };
+
+  const total = carrinho.reduce((acc, i) => acc + i.preco * i.qtd, 0);
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
 
   return (
     <div className={styles.container}>
 
-      {/* HEADER BONITO */}
-      <header className={styles.header}>
-        <h1>{loja?.name || "Loja"}</h1>
-        <p>Escolha seus produtos e peça pelo WhatsApp</p>
-      </header>
+      {/* HERO */}
+      <div className={styles.hero}>
+        <h1>{loja?.name || "Minha Loja"}</h1>
+        <p>Compre direto pelo WhatsApp 🚀</p>
+      </div>
 
-      {/* GRID CORRETO */}
-      <div className={styles.gridProdutos}>
-        {produtos.length === 0 && (
-          <p className={styles.vazio}>Nenhum produto encontrado</p>
-        )}
-
+      {/* PRODUTOS */}
+      <div className={styles.grid}>
         {produtos.map(p => {
           const preco = calcularPreco(p);
 
           return (
-            <div key={p.id} className={styles.cardProduto}>
-              <div className={styles.imgContainer}>
+            <div key={p.id} className={styles.card}>
+              <div className={styles.imgWrap}>
                 {p.foto
                   ? <img src={p.foto} alt={p.nome} />
-                  : <div className={styles.semFoto}>📷</div>}
+                  : <div className={styles.noImg}>📦</div>}
               </div>
 
-              <div className={styles.infoProduto}>
+              <div className={styles.info}>
                 <h3>{p.nome}</h3>
-                <span className={styles.preco}>
-                  R$ {preco.toFixed(2)}
-                </span>
+                <span className={styles.price}>R$ {preco.toFixed(2)}</span>
 
-                <button
-                  className={styles.btnComprar}
-                  onClick={() => adicionar(p)}
-                >
-                  Adicionar
+                <button onClick={() => adicionar(p)}>
+                  <FiShoppingCart /> Adicionar
                 </button>
               </div>
             </div>
@@ -139,33 +128,26 @@ const Vitrine = () => {
 
       {/* CARRINHO */}
       {carrinho.length > 0 && (
-        <div className={styles.carrinhoFloat}>
-          <div className={styles.carrinhoHeader}>
-            <h3>🛒 Carrinho</h3>
+        <div className={styles.cart}>
+          <div className={styles.cartHeader}>
+            <h3>🛒 {carrinho.length} itens</h3>
+            <span>R$ {total.toFixed(2)}</span>
           </div>
 
-          <div className={styles.carrinhoItens}>
-            {carrinho.map(i => (
-              <div key={i.id} className={styles.carrinhoItem}>
-                <span className={styles.itemNome}>{i.nome}</span>
+          {carrinho.map(i => (
+            <div key={i.id} className={styles.cartItem}>
+              <span>{i.nome}</span>
 
-                <div className={styles.controlesQtd}>
-                  <button onClick={() => alterar(i.id, -1)}>
-                    <FiMinus />
-                  </button>
-
-                  <span>{i.qtd}</span>
-
-                  <button onClick={() => alterar(i.id, 1)}>
-                    <FiPlus />
-                  </button>
-                </div>
+              <div>
+                <button onClick={() => alterar(i.id, -1)}><FiMinus /></button>
+                <span>{i.qtd}</span>
+                <button onClick={() => alterar(i.id, 1)}><FiPlus /></button>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
 
-          <button className={styles.btnFinalizar} onClick={enviar}>
-            <FiSend /> Enviar Pedido
+          <button className={styles.btnFinal} onClick={enviar}>
+            <FiSend /> Finalizar no WhatsApp
           </button>
         </div>
       )}
