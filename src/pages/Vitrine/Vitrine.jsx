@@ -9,11 +9,35 @@ const API_URL = "https://cotion.discloud.app";
 const Vitrine = () => {
   const { userId } = useParams();
   const [searchParams] = useSearchParams();
-  const whatsappNumber = searchParams.get("w"); // Pega o WhatsApp da URL
+  const whatsappNumber = searchParams.get("w");
 
   const [produtos, setProdutos] = useState([]);
   const [carrinho, setCarrinho] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // =========================================================================
+  // 🔥 TRUQUE MÁGICO: Esconder a Navbar Global apenas nesta tela
+  // =========================================================================
+  useEffect(() => {
+    // 1. Procura a Navbar na página. 
+    // OBS: Substitua 'nav' pela tag HTML ou ID/Classe real da sua Navbar se necessário 
+    // (ex: document.querySelector('.navbar') ou document.getElementById('menu-principal'))
+    const navbarElement = document.querySelector('nav'); 
+    
+    if (navbarElement) {
+      // Esconde a navbar
+      navbarElement.style.display = 'none';
+    }
+
+    // 2. Quando o componente for desmontado (o usuário sair da vitrine),
+    // devolvemos a Navbar para o estado normal para não quebrar o resto do site.
+    return () => {
+      if (navbarElement) {
+        navbarElement.style.display = ''; // Volta ao display padrão (flex, block, etc)
+      }
+    };
+  }, []);
+  // =========================================================================
 
   useEffect(() => {
     const fetchVitrine = async () => {
@@ -29,7 +53,6 @@ const Vitrine = () => {
     if (userId) fetchVitrine();
   }, [userId]);
 
-  // Mesmo cálculo do Dashboard para garantir o preço exato
   const calcularPrecoSugerido = (prod) => {
     const custo = prod.custo_raw / 100;
     const frete = prod.frete_raw / 100;
@@ -58,7 +81,7 @@ const Vitrine = () => {
         return novaQtd > 0 ? { ...item, qtd: novaQtd } : null;
       }
       return item;
-    }).filter(Boolean)); // Remove itens com quantidade 0
+    }).filter(Boolean));
   };
 
   const enviarPedidoWhatsApp = () => {

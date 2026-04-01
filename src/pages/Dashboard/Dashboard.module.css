@@ -526,3 +526,64 @@
     display: none !important;
   }
 }
+
+/* =========================================
+   AÇÕES DO CARD DE ASSINATURA
+   ========================================= */
+
+.subActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Botão de Upgrade (Seja Premium) - Chamativo */
+.btnUpgrade {
+  background: linear-gradient(120deg, #38bdf8, #818cf8);
+  color: #0f172a;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
+}
+
+.btnUpgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+}
+
+/* Botão de Cancelar - Discreto e com tom de alerta */
+.btnCancelSub {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnCancelSub:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+/* Ajuste no Mobile para os botões ocuparem a largura toda */
+@media (max-width: 768px) {
+  .subActions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .btnUpgrade, .btnCancelSub {
+    width: 100%;
+    text-align: center;
+  }
+}
