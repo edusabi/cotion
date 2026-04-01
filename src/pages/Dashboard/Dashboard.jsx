@@ -344,15 +344,15 @@ const Dashboard = () => {
 
                     <div className={styles.prodAcoes}>
                       {/* BOTÃO ENVIAR ORÇAMENTO WPP */}
-                      <button onClick={() => enviarParaWhatsApp(prod)} style={{ background: '#25D366', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }} title="Enviar Orçamento WhatsApp">
+                      <button onClick={() => enviarParaWhatsApp(prod)} className={styles.btnZap} title="Enviar Orçamento WhatsApp">
                         <FiMessageCircle /> Orçar
                       </button>
 
                       <button onClick={() => setProdutoMultiCanal(prod)} className={styles.btnMultiCanal} title="Simular Preços">
                         🛒 Canais
                       </button>
-                      <button onClick={() => setProdutoAtual(prod)} title="Editar Produto">✏️</button>
-                      <button onClick={() => excluirProduto(prod.id)} title="Excluir Produto" className={styles.btnTrash}><FiTrash2 /></button>
+                      <button onClick={() => setProdutoAtual(prod)} title="Editar Produto" className={styles.btnAcaoIcon}>✏️</button>
+                      <button onClick={() => excluirProduto(prod.id)} title="Excluir Produto" className={styles.btnAcaoIcon}><FiTrash2 /></button>
                     </div>
                   </div>
                 )
