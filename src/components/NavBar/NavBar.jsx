@@ -17,7 +17,7 @@ export default function NavBar() {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className={styles.navbar}>
+    <nav className={styles.navbar} id="menu_principal">
       <img src="logo_grande.png" alt="Logo" width="150px" />
 
       {/* Botão de Toggle visível apenas no mobile */}

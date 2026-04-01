@@ -18,22 +18,17 @@ const Vitrine = () => {
   // =========================================================================
   // 🔥 TRUQUE MÁGICO: Esconder a Navbar Global apenas nesta tela
   // =========================================================================
-  useEffect(() => {
-    // 1. Procura a Navbar na página. 
-    // OBS: Substitua 'nav' pela tag HTML ou ID/Classe real da sua Navbar se necessário 
-    // (ex: document.querySelector('.navbar') ou document.getElementById('menu-principal'))
-    const navbarElement = document.querySelector('nav'); 
+ useEffect(() => {
+    // Procura o menu pelo ID exato que colocamos lá
+    const navbarElement = document.getElementById('menu_principal'); 
     
     if (navbarElement) {
-      // Esconde a navbar
-      navbarElement.style.display = 'none';
+      navbarElement.style.display = 'none'; // Esconde
     }
 
-    // 2. Quando o componente for desmontado (o usuário sair da vitrine),
-    // devolvemos a Navbar para o estado normal para não quebrar o resto do site.
     return () => {
       if (navbarElement) {
-        navbarElement.style.display = ''; // Volta ao display padrão (flex, block, etc)
+        navbarElement.style.display = ''; // Mostra de volta ao sair
       }
     };
   }, []);
