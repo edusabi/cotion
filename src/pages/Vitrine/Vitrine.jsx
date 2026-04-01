@@ -19,7 +19,8 @@ const Vitrine = () => {
   // 🔥 TRUQUE MÁGICO: Esconder a Navbar Global apenas nesta tela
   // =========================================================================
   useEffect(() => {
-    // Procura o menu pelo ID exato que colocamos lá
+    // Procura o menu pelo ID exato que colocamos lá na sua Navbar.
+    // DICA: Certifique-se de colocar id="menu-principal" na <div> principal do seu componente Navbar.jsx!
     const navbarElement = document.getElementById('menu-principal'); 
     
     if (navbarElement) {
@@ -89,7 +90,7 @@ const Vitrine = () => {
     carrinho.forEach((item) => {
       const subtotal = item.precoReal * item.qtd;
       total += subtotal;
-      // Usando item.name em vez de item.nome
+      // Puxando a propriedade correta: item.name
       textoPedido += `▪️ ${item.qtd}x *${item.name}* - R$ ${subtotal.toFixed(2)}\n`;
     });
 
@@ -118,11 +119,11 @@ const Vitrine = () => {
           return (
             <div key={prod.id} className={styles.cardProduto}>
               <div className={styles.imgContainer}>
-                {/* Usando prod.name no alt da imagem */}
+                {/* Puxando a propriedade correta: prod.name */}
                 {prod.foto ? <img src={prod.foto} alt={prod.name} /> : <div className={styles.semFoto}>📷</div>}
               </div>
               <div className={styles.infoProduto}>
-                {/* Usando prod.name aqui */}
+                {/* Puxando a propriedade correta: prod.name */}
                 <h3>{prod.name}</h3>
                 <span className={styles.preco}>R$ {preco.toFixed(2)}</span>
                 <button onClick={() => adicionarAoCarrinho(prod)} className={styles.btnComprar}>
@@ -144,7 +145,7 @@ const Vitrine = () => {
           <div className={styles.carrinhoItens}>
             {carrinho.map(item => (
               <div key={item.id} className={styles.carrinhoItem}>
-                {/* Usando item.name aqui também */}
+                {/* Puxando a propriedade correta: item.name */}
                 <span className={styles.itemNome}>{item.name}</span>
                 <div className={styles.controlesQtd}>
                   <button onClick={() => alterarQuantidade(item.id, -1)}><FiMinus /></button>
