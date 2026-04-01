@@ -102,6 +102,14 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            
+            {/* FRASE "ESQUECI A SENHA" ADICIONADA AQUI */}
+            <div className={styles.forgotPasswordContainer}>
+              <a href="/recuperar-senha" className={styles.forgotLink}>
+                Esqueceu a senha?
+              </a>
+            </div>
+
             {errors.password && (
               <span className={styles.error}>{errors.password}</span>
             )}
