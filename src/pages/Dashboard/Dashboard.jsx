@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import styles from "./Dashboard.module.css";
-import { FiStar, FiAlertCircle, FiTrash2, FiPrinter, FiFileText } from "react-icons/fi";
+import { FiStar, FiAlertCircle, FiTrash2, FiPrinter, FiFileText, FiLink, FiMessageCircle } from "react-icons/fi";
 
-// URL base do seu servidor
 const API_URL = "https://cotion.discloud.app"; 
 
 const Dashboard = () => {
@@ -30,7 +29,6 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      // Busca dados do usuário e produtos em paralelo
       const [userRes, prodRes] = await Promise.all([
         axios.get(`${API_URL}/me`, { withCredentials: true }),
         axios.get(`${API_URL}/products`, { withCredentials: true })
@@ -45,7 +43,6 @@ const Dashboard = () => {
     }
   };
 
-  // 🔥 FUNÇÃO DE CANCELAMENTO
   const handleCancelSubscription = async () => {
     const confirmar = window.confirm(
       "Tem certeza que deseja cancelar seu acesso Premium? Você perderá o acesso às ferramentas exclusivas imediatamente."
@@ -60,6 +57,36 @@ const Dashboard = () => {
         alert("Erro ao processar cancelamento. Tente novamente.");
       }
     }
+  };
+
+  // 🔥 NOVA FUNÇÃO: Gerar Link da Vitrine Pública
+  const gerarLinkVitrine = () => {
+    if (!user?.id) return alert("Erro: ID do usuário não encontrado.");
+    
+    const zap = prompt("📱 Digite o WhatsApp da sua loja com DDD (Ex: 81999998888):");
+    if (!zap) return;
+    
+    const apenasNumeros = zap.replace(/\D/g, "");
+    const link = `${window.location.origin}/vitrine/${user.id}?w=55${apenasNumeros}`;
+    
+    navigator.clipboard.writeText(link);
+    alert("✅ Link copiado com sucesso!\n\nEnvie para seus clientes ou coloque na bio do Instagram:\n" + link);
+  };
+
+  // 🔥 NOVA FUNÇÃO: Enviar Orçamento Rápido via WhatsApp
+  const enviarParaWhatsApp = (prod) => {
+    const calc = calcularResultados(prod);
+    const valorSugerido = calc.precoIdeal;
+
+    if (!valorSugerido || valorSugerido <= 0) {
+      alert("⚠️ Calcule as taxas e margem deste produto antes de enviar o orçamento.");
+      return;
+    }
+
+    const mensagem = `Olá! Tudo bem? 🤝\n\nSegue o orçamento para o item: *${prod.nome}*\n\n💰 *Valor de Investimento:* R$ ${valorSugerido.toFixed(2).replace('.', ',')}\n💳 Aceitamos Pix, Dinheiro e Cartões.\n\nQualquer dúvida, estou à disposição para fecharmos!\n\n_Orçamento gerado via Cotion_`;
+    
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, "_blank");
   };
 
   const formatarParaMoeda = (valorNumerico) => {
@@ -197,7 +224,6 @@ const Dashboard = () => {
 
   return (
     <div className={styles.container}>
-      {/* SEÇÃO DE ASSINATURA */}
       <section className={`${styles.subscriptionCard} ${styles.noPrint}`}>
         <div className={styles.subInfo}>
           <div className={styles.subHeader}>
@@ -229,6 +255,11 @@ const Dashboard = () => {
         <p>Cadastre seus produtos, calcule margens e exporte seus relatórios.</p>
         
         <div className={styles.acoesTop}>
+          {/* BOTÃO DA VITRINE */}
+          <button onClick={gerarLinkVitrine} style={{ background: '#25D366', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <FiLink /> Criar Minha Vitrine
+          </button>
+          
           <button onClick={exportarExcel} className={styles.btnSecundario} disabled={produtos.length === 0}>
             <FiFileText /> Baixar Excel
           </button>
@@ -312,6 +343,11 @@ const Dashboard = () => {
                     </div>
 
                     <div className={styles.prodAcoes}>
+                      {/* BOTÃO ENVIAR ORÇAMENTO WPP */}
+                      <button onClick={() => enviarParaWhatsApp(prod)} style={{ background: '#25D366', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }} title="Enviar Orçamento WhatsApp">
+                        <FiMessageCircle /> Orçar
+                      </button>
+
                       <button onClick={() => setProdutoMultiCanal(prod)} className={styles.btnMultiCanal} title="Simular Preços">
                         🛒 Canais
                       </button>
@@ -376,7 +412,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Tabela oculta usada apenas para a função de impressão do navegador */}
       <div className={styles.apenasImpressao}>
         <h2>Relatório de Precificação Multi-Canal</h2>
         <table className={styles.tabelaImpressao}>

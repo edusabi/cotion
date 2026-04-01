@@ -19,6 +19,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import CaixaDiario from './pages/CaixaDiario/CaixaDiario';
 import ReversePricing from "./pages/ReversePricing/ReversePricing";
 import MachineComparator from "./pages/MachineComparator/MachineComparator";
+import Vitrine from "./pages/Vitrine/Vitrine";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path='/contato' element={<Contact />} />
         <Route path='/login' element={<Login />} />
         <Route path='/registro' element={<Register />} />
+        <Route path='/vitrine/:userId' element={<Vitrine />} />
 
         {/* 2. ADICIONE A NOVA ROTA AQUI EMBAIXO DO DASHBOARD */}
         <Route 
