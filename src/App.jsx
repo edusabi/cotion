@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import NotFound from "./components/Notfound/Notfound";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 // pages
 import Home from "./pages/Home/Home";
@@ -37,6 +38,7 @@ function AppContent() {
         <Route path='/login' element={<Login />} />
         <Route path='/registro' element={<Register />} />
         <Route path='/vitrine/:userId' element={<Vitrine />} />
+        <Route path='/recuperar-senha' element={<ForgotPassword />} />
 
         <Route 
           path='/sucesso' 
