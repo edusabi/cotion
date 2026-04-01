@@ -62,24 +62,29 @@ const Dashboard = () => {
   // 🔥 NOVA FUNÇÃO: Gerar Link da Vitrine Pública
   const gerarLinkVitrine = async () => {
   try {
-    if (!user?.id) return alert("Erro: usuário não carregado.");
+    if (!user?.id) return alert("Erro ao carregar usuário");
 
-    // cria slug se não existir
-    if (!user.slug) {
+    let slug = user.slug;
+
+    // 🔥 cria se não existir
+    if (!slug) {
       const res = await axios.post(`${API_URL}/api/create-slug`, {
         userId: user.id,
-        nome: user.name
+        nome: user.name || "minhaloja"
       });
 
-      setUser(res.data);
+      slug = res.data.slug;
+
+      // atualiza estado
+      setUser(prev => ({ ...prev, slug }));
     }
 
-    const zap = prompt("📱 Digite o WhatsApp (Ex: 81999998888):");
+    const zap = prompt("Digite seu WhatsApp com DDD:");
     if (!zap) return;
 
-    const apenasNumeros = zap.replace(/\D/g, "");
+    const numero = zap.replace(/\D/g, "");
 
-    const link = `${window.location.origin}/vitrine/${user.slug}?w=55${apenasNumeros}`;
+    const link = `${window.location.origin}/vitrine/${slug}?w=55${numero}`;
 
     navigator.clipboard.writeText(link);
 
