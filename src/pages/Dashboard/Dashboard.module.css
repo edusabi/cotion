@@ -91,6 +91,10 @@
   background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 0.5rem;
 }
 
+.btnTrash{
+  color: #fff;
+}
+
 /* RESPONSIVIDADE */
 @media (max-width: 900px) {
   .grid { grid-template-columns: 1fr; }
