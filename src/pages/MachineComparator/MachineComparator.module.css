@@ -247,9 +247,14 @@
   backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
-  align-items: center;
+  
+  /* CORREÇÃO 1: Começa do topo ao invés do centro */
+  align-items: flex-start; 
+  
   z-index: 9999;
-  padding: 1rem;
+  
+  /* CORREÇÃO 2: Garante um espaço seguro (respiro) no topo e nas laterais */
+  padding: 5vh 20px; 
   box-sizing: border-box;
 }
 
@@ -257,8 +262,14 @@
   position: relative;
   width: 100%;
   max-width: 550px;
-  max-height: 90vh;
-  overflow-y: auto;
+  
+  /* CORREÇÃO 3: Isso centraliza o modal verticalmente se a tela for grande */
+  margin: auto; 
+  
+  /* Mantemos um limite de altura para ele ter scroll interno elegante */
+  max-height: 85vh; 
+  overflow-y: auto; 
+  
   background: linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 20px;
