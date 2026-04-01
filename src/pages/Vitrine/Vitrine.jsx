@@ -18,9 +18,9 @@ const Vitrine = () => {
   // =========================================================================
   // 🔥 TRUQUE MÁGICO: Esconder a Navbar Global apenas nesta tela
   // =========================================================================
- useEffect(() => {
+  useEffect(() => {
     // Procura o menu pelo ID exato que colocamos lá
-    const navbarElement = document.getElementById('menu_principal'); 
+    const navbarElement = document.getElementById('menu-principal'); 
     
     if (navbarElement) {
       navbarElement.style.display = 'none'; // Esconde
@@ -89,7 +89,8 @@ const Vitrine = () => {
     carrinho.forEach((item) => {
       const subtotal = item.precoReal * item.qtd;
       total += subtotal;
-      textoPedido += `▪️ ${item.qtd}x *${item.nome}* - R$ ${subtotal.toFixed(2)}\n`;
+      // Usando item.name em vez de item.nome
+      textoPedido += `▪️ ${item.qtd}x *${item.name}* - R$ ${subtotal.toFixed(2)}\n`;
     });
 
     textoPedido += `\n💰 *TOTAL DO PEDIDO: R$ ${total.toFixed(2)}*\n\n`;
@@ -117,10 +118,12 @@ const Vitrine = () => {
           return (
             <div key={prod.id} className={styles.cardProduto}>
               <div className={styles.imgContainer}>
-                {prod.foto ? <img src={prod.foto} alt={prod.nome} /> : <div className={styles.semFoto}>📷</div>}
+                {/* Usando prod.name no alt da imagem */}
+                {prod.foto ? <img src={prod.foto} alt={prod.name} /> : <div className={styles.semFoto}>📷</div>}
               </div>
               <div className={styles.infoProduto}>
-                <h3>{prod.nome}</h3>
+                {/* Usando prod.name aqui */}
+                <h3>{prod.name}</h3>
                 <span className={styles.preco}>R$ {preco.toFixed(2)}</span>
                 <button onClick={() => adicionarAoCarrinho(prod)} className={styles.btnComprar}>
                   Adicionar
@@ -141,7 +144,8 @@ const Vitrine = () => {
           <div className={styles.carrinhoItens}>
             {carrinho.map(item => (
               <div key={item.id} className={styles.carrinhoItem}>
-                <span className={styles.itemNome}>{item.nome}</span>
+                {/* Usando item.name aqui também */}
+                <span className={styles.itemNome}>{item.name}</span>
                 <div className={styles.controlesQtd}>
                   <button onClick={() => alterarQuantidade(item.id, -1)}><FiMinus /></button>
                   <span>{item.qtd}</span>
