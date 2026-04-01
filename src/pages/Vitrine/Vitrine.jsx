@@ -7,7 +7,7 @@ import styles from "./Vitrine.module.css";
 const API_URL = "https://cotion.discloud.app";
 
 const Vitrine = () => {
-  const { userId } = useParams(); // agora é SLUG
+  const { userId } = useParams(); // slug
   const [searchParams] = useSearchParams();
   const whatsappNumber = searchParams.get("w");
 
@@ -23,7 +23,7 @@ const Vitrine = () => {
         setProdutos(res.data.produtos);
         setLoja(res.data.loja);
       } catch (error) {
-        console.error("Erro:", error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -81,7 +81,7 @@ const Vitrine = () => {
     carrinho.forEach(i => {
       const sub = i.preco * i.qtd;
       total += sub;
-      texto += `▪️ ${i.qtd}x *${i.name}* - R$ ${sub.toFixed(2)}\n`;
+      texto += `▪️ ${i.qtd}x *${i.nome}* - R$ ${sub.toFixed(2)}\n`;
     });
 
     texto += `\n💰 TOTAL: R$ ${total.toFixed(2)}`;
@@ -91,39 +91,80 @@ const Vitrine = () => {
     );
   };
 
-  if (loading) return <div>Carregando...</div>;
+  if (loading) return <div className={styles.loading}>Carregando...</div>;
 
   return (
     <div className={styles.container}>
-      <h1>{loja?.name || "Loja"}</h1>
 
-      <div className={styles.grid}>
+      {/* HEADER BONITO */}
+      <header className={styles.header}>
+        <h1>{loja?.name || "Loja"}</h1>
+        <p>Escolha seus produtos e peça pelo WhatsApp</p>
+      </header>
+
+      {/* GRID CORRETO */}
+      <div className={styles.gridProdutos}>
+        {produtos.length === 0 && (
+          <p className={styles.vazio}>Nenhum produto encontrado</p>
+        )}
+
         {produtos.map(p => {
           const preco = calcularPreco(p);
 
           return (
-            <div key={p.id} className={styles.card}>
-              {p.foto && <img src={p.foto} alt={p.name} />}
-              <h3>{p.name}</h3>
-              <p>R$ {preco.toFixed(2)}</p>
-              <button onClick={() => adicionar(p)}>Adicionar</button>
+            <div key={p.id} className={styles.cardProduto}>
+              <div className={styles.imgContainer}>
+                {p.foto
+                  ? <img src={p.foto} alt={p.nome} />
+                  : <div className={styles.semFoto}>📷</div>}
+              </div>
+
+              <div className={styles.infoProduto}>
+                <h3>{p.nome}</h3>
+                <span className={styles.preco}>
+                  R$ {preco.toFixed(2)}
+                </span>
+
+                <button
+                  className={styles.btnComprar}
+                  onClick={() => adicionar(p)}
+                >
+                  Adicionar
+                </button>
+              </div>
             </div>
           );
         })}
       </div>
 
+      {/* CARRINHO */}
       {carrinho.length > 0 && (
-        <div className={styles.carrinho}>
-          {carrinho.map(i => (
-            <div key={i.id}>
-              <span>{i.name}</span>
-              <button onClick={() => alterar(i.id, -1)}><FiMinus /></button>
-              <span>{i.qtd}</span>
-              <button onClick={() => alterar(i.id, 1)}><FiPlus /></button>
-            </div>
-          ))}
+        <div className={styles.carrinhoFloat}>
+          <div className={styles.carrinhoHeader}>
+            <h3>🛒 Carrinho</h3>
+          </div>
 
-          <button onClick={enviar}>
+          <div className={styles.carrinhoItens}>
+            {carrinho.map(i => (
+              <div key={i.id} className={styles.carrinhoItem}>
+                <span className={styles.itemNome}>{i.nome}</span>
+
+                <div className={styles.controlesQtd}>
+                  <button onClick={() => alterar(i.id, -1)}>
+                    <FiMinus />
+                  </button>
+
+                  <span>{i.qtd}</span>
+
+                  <button onClick={() => alterar(i.id, 1)}>
+                    <FiPlus />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <button className={styles.btnFinalizar} onClick={enviar}>
             <FiSend /> Enviar Pedido
           </button>
         </div>
