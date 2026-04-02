@@ -37,6 +37,7 @@ function AppContent() {
         <Route path='/contato' element={<Contact />} />
         <Route path='/login' element={<Login />} />
         <Route path='/registro' element={<Register />} />
+        <Route path='/calculadora' element={<MachineComparator />}/>
         <Route path='/vitrine/:userId' element={<Vitrine />} />
         <Route path='/recuperar-senha' element={<ForgotPassword />} />
 
@@ -72,15 +73,6 @@ function AppContent() {
           element={
             <PrivateRoute>
               <ReversePricing />
-            </PrivateRoute>
-          } 
-        />
-
-        <Route 
-          path='/calculadora' 
-          element={
-            <PrivateRoute>
-              <MachineComparator />
             </PrivateRoute>
           } 
         />

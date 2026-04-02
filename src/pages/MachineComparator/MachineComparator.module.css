@@ -1,322 +1,211 @@
-/* components/MachineComparator/MachineComparator.module.css */
-
 .container {
-  max-width: 680px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background: linear-gradient(140deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.70));
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.4);
-  border-radius: 24px;
-  color: #ffffff;
-  font-family: inherit;
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
 }
 
-.titleRow {
+.header h2 {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 15px;
-  position: relative;
+  gap: 10px;
+  font-size: 24px;
+  color: #1e293b;
   margin-bottom: 8px;
 }
 
-.titleRow h2 {
-  margin: 0;
-  font-size: clamp(1.6rem, 2.5vw, 2rem);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .titleIcon {
-  color: #38bdf8;
+  color: #3b82f6;
 }
 
 .header p {
-  color: rgba(226, 232, 240, 0.88);
-  font-size: 1rem;
-  margin: 0;
+  color: #64748b;
+  font-size: 16px;
 }
 
-.configBtn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #38bdf8;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.configBtn:hover {
-  background: rgba(56, 189, 248, 0.2);
-  transform: rotate(45deg);
-}
-
-.calculatorPanel {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  margin-bottom: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.controlsRow {
+.contentGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.calculatorCard, .resultPanel {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
 }
 
 .inputGroup {
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .inputGroup label {
-  font-size: 0.95rem;
   font-weight: 600;
-  color: rgba(226, 232, 240, 0.95);
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 14px;
 }
 
-.inputGroup input,
-.inputGroup select {
-  padding: 14px;
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
+.inputGroup input {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 16px;
+  transition: all 0.2s;
 }
 
-.inputGroup input:focus,
-.inputGroup select:focus {
+.inputGroup input:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-}
-
-/* =========================================
-   ÁREA DE RESULTADOS
-   ========================================= */
-.resultsArea {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  animation: slideDown 0.4s ease-out forwards;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.savingsAlert {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(15, 23, 42, 0.8));
-  border: 1px solid rgba(34, 197, 94, 0.4);
-  padding: 16px 20px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.1);
-}
-
-.savingsIcon {
-  font-size: 2rem;
-  color: #34d399;
-}
-
-.savingsText {
-  margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  color: rgba(226, 232, 240, 0.95);
-}
-
-.rankingList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.machineCard {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 14px;
-  transition: transform 0.2s ease;
-}
-
-.winnerCard {
-  background: rgba(15, 23, 42, 0.9);
-  border-color: rgba(34, 197, 94, 0.5);
-  box-shadow: 0 5px 15px rgba(34, 197, 94, 0.1);
-  transform: scale(1.02);
-  z-index: 2;
-}
-
-.machineInfo {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.machineBadge {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
-.machineInfo h4 {
-  margin: 0 0 4px 0;
-  font-size: 1.1rem;
-  color: #fff;
-}
-
-.rateUsed {
-  font-size: 0.85rem;
-  color: rgba(226, 232, 240, 0.6);
-}
-
-.machineValues {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.negativeValue {
-  color: #f87171;
-  font-size: 0.85rem;
-}
-
-.machineValues strong {
-  font-size: 1.4rem;
-  color: rgba(226, 232, 240, 0.8);
-}
-
-.textGreen {
-  color: #34d399 !important;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .emptyState {
-  text-align: center;
-  padding: 40px 20px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-}
-
-.emptyState p {
-  margin: 10px 0 0;
-  color: rgba(226, 232, 240, 0.7);
-  font-size: 1rem;
-}
-
-/* =========================================
-   MODAL DE CONFIGURAÇÕES (OVERLAY E CONTAINER)
-   ========================================= */
-
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10, 15, 28, 0.85);
-  backdrop-filter: blur(10px);
   display: flex;
-  justify-content: center;
-  
-  /* CORREÇÃO 1: Começa do topo ao invés do centro */
-  align-items: flex-start; 
-  
-  z-index: 9999;
-  
-  /* CORREÇÃO 2: Garante um espaço seguro (respiro) no topo e nas laterais */
-  padding: 5vh 20px; 
-  box-sizing: border-box;
-}
-
-.modalContent {
-  position: relative;
-  width: 100%;
-  max-width: 550px;
-  margin: auto; 
-  max-height: 85vh; 
-  overflow-y: auto; 
-  background: linear-gradient(140deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 20px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-  
-  /* MUDE AQUI: Corrigindo a cor para o Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-}
-
-.closeModal {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #f87171;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: #94a3b8;
+  gap: 16px;
+}
+
+.resultCard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.financialSummary {
+  display: flex;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.summaryItem span {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.summaryItem strong {
+  font-size: 28px;
+}
+
+.alertBox {
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.alertHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.alertBox p {
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* BANNER DE UPSELL */
+.upsellBanner {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 12px;
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.upsellInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.upsellIcon {
+  font-size: 40px;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.upsellInfo h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.upsellInfo p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.upsellBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
   cursor: pointer;
-  z-index: 100;
-  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  transition: background 0.2s;
 }
 
-.closeModal:hover {
-  background: #ef4444;
-  color: #fff;
-  transform: scale(1.05);
+.upsellBtn:hover {
+  background: #2563eb;
 }
 
-@media (max-width: 600px) {
-  .container {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
-  .controlsRow {
+/* Responsividade Básica */
+@media (max-width: 768px) {
+  .contentGrid {
     grid-template-columns: 1fr;
   }
-  .machineCard {
+  
+  .upsellBanner {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    text-align: center;
+    padding: 24px 16px;
   }
-  .machineValues {
+  
+  .upsellInfo {
+    flex-direction: column;
+  }
+  
+  .upsellBtn {
     width: 100%;
-    align-items: flex-start;
-    text-align: left;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 12px;
+    justify-content: center;
   }
 }
