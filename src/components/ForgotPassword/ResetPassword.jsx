@@ -3,8 +3,10 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../../pages/Login/Login.module.css"; 
 
+// 🔥 ADICIONE A URL DO SEU BACKEND AQUI TAMBÉM
+const API_URL = process.env.REACT_APP_API_URL || "https://cotion.discloud.app";
+
 export default function ResetPassword() {
-  // Pega o ID e o Token dinâmicos direto da URL
   const { id, token } = useParams(); 
   const navigate = useNavigate();
   
@@ -20,15 +22,15 @@ export default function ResetPassword() {
     }
 
     try {
-      // Enviamos o ID, o Token e a Nova Senha para o backend
-      await axios.post("/auth/reset_password", { 
+      // 🔥 AQUI TAMBÉM: Coloque o API_URL
+      await axios.post(`${API_URL}/auth/reset_password`, { 
         id, 
         token, 
         newPassword 
       });
       
       setMessage("Senha atualizada com sucesso! Redirecionando...");
-      setTimeout(() => navigate('/login'), 2500); // Manda pro login após 2.5s
+      setTimeout(() => navigate('/login'), 2500); 
     } catch (err) {
       setMessage(err.response?.data?.error || "Erro ao atualizar senha.");
     }
