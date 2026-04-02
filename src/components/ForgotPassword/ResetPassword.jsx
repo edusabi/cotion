@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import styles from "../../pages/Login/Login.module.css"; // Reaproveitando seu estilo
+import { useParams, useNavigate } from "react-router-dom";
+import styles from "../../pages/Login/Login.module.css"; 
 
 export default function ResetPassword() {
+  // Pega o ID e o Token dinâmicos direto da URL
+  const { id, token } = useParams(); 
+  const navigate = useNavigate();
+  
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    // Quando a página carrega, nós pegamos o token que o Supabase colocou na URL
-    const hash = window.location.hash;
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1)); // Remove o "#"
-      const accessToken = params.get("access_token");
-      if (accessToken) {
-        setToken(accessToken);
-      }
-    }
-  }, []);
 
   async function handleUpdatePassword(e) {
     e.preventDefault();
@@ -27,17 +19,16 @@ export default function ResetPassword() {
       return setMessage("As senhas não coincidem!");
     }
 
-    if (!token) {
-      return setMessage("Token inválido ou expirado. Solicite a recuperação novamente.");
-    }
-
     try {
-      // Enviamos a nova senha E o token para o seu backend
+      // Enviamos o ID, o Token e a Nova Senha para o backend
       await axios.post("/auth/reset_password", { 
-        newPassword, 
-        accessToken: token 
+        id, 
+        token, 
+        newPassword 
       });
-      setMessage("Senha atualizada com sucesso! Você já pode fazer login.");
+      
+      setMessage("Senha atualizada com sucesso! Redirecionando...");
+      setTimeout(() => navigate('/login'), 2500); // Manda pro login após 2.5s
     } catch (err) {
       setMessage(err.response?.data?.error || "Erro ao atualizar senha.");
     }

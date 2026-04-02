@@ -19,6 +19,7 @@ import ReversePricing from "./pages/ReversePricing/ReversePricing";
 import MachineComparator from "./pages/MachineComparator/MachineComparator";
 import Vitrine from "./pages/Vitrine/Vitrine";
 import Success from "./pages/Success/Success";
+import ResetPassword from "./components/ForgotPassword/ResetPassword";
 
 
 // 🔥 ESSE CARA CONTROLA A NAVBAR
@@ -40,6 +41,7 @@ function AppContent() {
         <Route path='/calculadora' element={<MachineComparator />}/>
         <Route path='/vitrine/:userId' element={<Vitrine />} />
         <Route path='/recuperar-senha' element={<ForgotPassword />} />
+        <Route path='/redefinir-senha/:id/:token' element={<ResetPassword />} />
 
         <Route 
           path='/sucesso' 
