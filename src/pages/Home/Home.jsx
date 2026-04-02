@@ -6,27 +6,27 @@ import styles from "./Home.module.css";
 const API_URL = "https://cotion.discloud.app"; // Lembre-se de mudar para sua URL real no deploy
 
 const messages = [
-  "💰 Economize centenas de reais fugindo de taxas abusivas",
-  "🚀 A suíte financeira definitiva para o comércio local e digital",
+  "💰 Pare de dar o seu lucro para o banco: fuja das taxas invisíveis e abusivas.",
+  "🚀 A única ferramenta que te mostra exatamente quanto dinheiro sobra no seu bolso.",
 ];
 
 // Atualizado com TODAS as funcionalidades matadoras do seu app
 const cards = [
   {
-    title: "🎯 Precificação Inteligente",
-    description: "Insira custos, fretes e impostos. O sistema calcula o preço exato para você bater sua meta de margem de lucro.",
+    title: "🎯 Precificação à Prova de Prejuízo",
+    description: "Nunca mais chute preços. Insira seus custos e o sistema te dá o valor exato de venda para garantir a sua margem de lucro, sem achismos.",
   },
   {
-    title: "🕵️‍♂️ Espião de Concorrente",
-    description: "Engenharia reversa pura: descubra instantaneamente se vale a pena cobrir a oferta da concorrência ou se é prejuízo na certa.",
+    title: "🕵️‍♂️ Raio-X da Concorrência",
+    description: "O cliente disse que o vizinho faz mais barato? Descubra em segundos se cobrir o preço dele vai te dar lucro ou se é uma armadilha financeira.",
   },
   {
-    title: "💳 Comparador de Maquininhas",
-    description: "Digite o valor da venda e saiba na hora qual das suas maquininhas vai colocar mais dinheiro no seu bolso. Pare de perder para as taxas.",
+    title: "💳 Bússola das Maquininhas",
+    description: "Débito, crédito ou parcelado? Saiba instantaneamente em qual das suas maquininhas você deve passar o cartão para lucrar mais na venda.",
   },
   {
-    title: "📊 Caixa Diário Inteligente",
-    description: "Registre suas entradas e saídas de forma simples e tenha clareza absoluta de quanto a sua empresa realmente lucrou no dia.",
+    title: "📊 Caixa Diário Blindado",
+    description: "Feche o dia com tranquilidade. Registre entradas e saídas em segundos e saiba com clareza absoluta quanto dinheiro sobrou limpo para você.",
   },
 ];
 
@@ -83,22 +83,22 @@ const Home = () => {
       {/* SEÇÃO HERO */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <h1>Parem de roubar o seu lucro.</h1>
+          <h1>Chega de trabalhar só para pagar boletos e taxas.</h1>
           <p>
-            Assuma o controle financeiro do seu negócio. Compare maquininhas, espione os custos para cobrir a concorrência e precifique com precisão cirúrgica.
+            Assuma o controle total do seu negócio. Descubra a maquininha mais barata, espione se vale a pena cobrir a concorrência e precifique seus produtos com precisão cirúrgica.
           </p>
           <div className={styles.ctaRow}>
             <button 
               onClick={() => user?.is_premium ? navigate("/dashboard") : document.getElementById('inscreva').scrollIntoView()} 
               className={styles.primaryBtn}
               style={{cursor: "pointer"}}>
-              {user?.is_premium ? "Acessar meu Dashboard 📊" : "Proteger meu lucro agora 💰"}
+              {user?.is_premium ? "Acessar meu Dashboard 📊" : "Quero blindar meu lucro agora 💰"}
             </button>
           </div>
         </div>
         
         <div className={styles.heroVisual}>
-          <div className={styles.visor}>Economia real em cada venda</div>
+          <div className={styles.visor}>Pare de perder dinheiro na hora</div>
           <div className={styles.images}>
             {/* Você pode trocar essa imagem por um print da sua tela do Comparador depois! */}
             <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=640&q=80" alt="dashboard financeiro" />
@@ -119,8 +119,8 @@ const Home = () => {
 
       {/* SEÇÃO CARDS DE BENEFÍCIOS */}
       <section className={styles.featureList} id="features">
-        <h2>Tudo que você precisa em um só lugar</h2>
-        <p>Desenvolvido para empreendedores que não têm tempo a perder.</p>
+        <h2>Um arsenal completo para o seu negócio</h2>
+        <p>Feito para empreendedores que querem lucrar mais, trabalhando a mesma coisa.</p>
         <div className={styles.cardGrid}>
           {cards.map((item) => (
             <article key={item.title} className={styles.featureCard}>
@@ -134,8 +134,8 @@ const Home = () => {
       {/* SEÇÃO DE PREÇO / ASSINATURA */}
       <section className={styles.pricing} id="inscreva">
         <div className={styles.priceCard}>
-          <h2>{user?.is_premium ? "Você já é Premium! ⭐" : "O sistema que se paga no primeiro dia."}</h2>
-          <p>Acesso ilimitado ao Comparador de Maquininhas, Espião de Concorrentes, Precificação e Caixa Diário.</p>
+          <h2>{user?.is_premium ? "Você já é Premium! ⭐" : "O sistema que se paga já na sua primeira venda."}</h2>
+          <p>Desbloqueie acesso total à Bússola de Maquininhas, Raio-X da Concorrência, Precificação e Caixa Diário.</p>
           
           {!user?.is_premium && (
             <div className={styles.priceBox}>
@@ -157,12 +157,12 @@ const Home = () => {
                 fontSize: "1.1rem"
             }}
           >
-            {isProcessing ? "Gerando Pagamento Seguro..." : user?.is_premium ? "Ir para o Sistema" : "Assinar Premium Agora"}
+            {isProcessing ? "Gerando Pagamento Seguro..." : user?.is_premium ? "Ir para o Sistema" : "Liberar Meu Acesso Premium"}
           </button>
           
           {!user && (
             <p className={styles.loginAlert} style={{ marginTop: "1rem", fontSize: "0.85rem", color: "rgba(226, 232, 240, 0.6)" }}>
-              * Crie sua conta ou faça login no momento do checkout. Cancelamento a qualquer momento.
+              * Crie sua conta ou faça login no momento do checkout. Cancele quando quiser, sem letras miúdas.
             </p>
           )}
         </div>
