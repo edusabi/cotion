@@ -6,23 +6,23 @@ import styles from "./Home.module.css";
 const API_URL = "https://cotion.discloud.app"; // Lembre-se de mudar para sua URL real no deploy
 
 const messages = [
-  "💰 Pare de dar o seu lucro para o banco: fuja das taxas invisíveis e abusivas.",
-  "🚀 A única ferramenta que te mostra exatamente quanto dinheiro sobra no seu bolso.",
+  "💰 Pare de dar o seu lucro para as taxas: saiba exatamente para onde vai o seu dinheiro.",
+  "🚀 A única ferramenta que te mostra se você está lucrando ou pagando para trabalhar.",
 ];
 
-// Atualizado com TODAS as funcionalidades matadoras do seu app
+// Atualizado com a funcionalidade Raio-X do Lucro
 const cards = [
+  {
+    title: "💀 Raio-X do Lucro",
+    description: "Acha que está ganhando dinheiro? Descubra em segundos o seu lucro real e veja se a sua margem não está sendo engolida pelas taxas.",
+  },
   {
     title: "🎯 Precificação à Prova de Prejuízo",
     description: "Nunca mais chute preços. Insira seus custos e o sistema te dá o valor exato de venda para garantir a sua margem de lucro, sem achismos.",
   },
   {
-    title: "🕵️‍♂️ Raio-X da Concorrência",
-    description: "O cliente disse que o vizinho faz mais barato? Descubra em segundos se cobrir o preço dele vai te dar lucro ou se é uma armadilha financeira.",
-  },
-  {
-    title: "💳 Bússola das Maquininhas",
-    description: "Débito, crédito ou parcelado? Saiba instantaneamente em qual das suas maquininhas você deve passar o cartão para lucrar mais na venda.",
+    title: "🕵️‍♂️ Espião da Concorrência",
+    description: "O cliente disse que o vizinho faz mais barato? Descubra instantaneamente se cobrir o preço dele vai te dar lucro ou se é uma armadilha financeira.",
   },
   {
     title: "📊 Caixa Diário Blindado",
@@ -85,7 +85,7 @@ const Home = () => {
         <div className={styles.heroInner}>
           <h1>Chega de trabalhar só para pagar boletos e taxas.</h1>
           <p>
-            Assuma o controle total do seu negócio. Descubra a maquininha mais barata, espione se vale a pena cobrir a concorrência e precifique seus produtos com precisão cirúrgica.
+            Assuma o controle total do seu negócio. Faça um Raio-X do seu lucro real, espione se vale a pena cobrir a concorrência e precifique seus produtos com precisão cirúrgica.
           </p>
           <div className={styles.ctaRow}>
             <button 
@@ -135,7 +135,7 @@ const Home = () => {
       <section className={styles.pricing} id="inscreva">
         <div className={styles.priceCard}>
           <h2>{user?.is_premium ? "Você já é Premium! ⭐" : "O sistema que se paga já na sua primeira venda."}</h2>
-          <p>Desbloqueie acesso total à Bússola de Maquininhas, Raio-X da Concorrência, Precificação e Caixa Diário.</p>
+          <p>Desbloqueie acesso total ao Raio-X do Lucro, Espião da Concorrência, Precificação Inteligente e Caixa Diário.</p>
           
           {!user?.is_premium && (
             <div className={styles.priceBox}>
