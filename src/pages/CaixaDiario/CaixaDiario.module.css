@@ -356,3 +356,20 @@
     font-size: 0.85rem;
   }
 }
+
+/* CSS do Gráfico em Tabela */
+.graficoFundo {
+  width: 100%;
+  height: 12px;
+  background-color: var(--border); /* Ou algo tipo rgba(255, 255, 255, 0.1) se não usar variáveis */
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.graficoBarra {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2)); /* Ou "#38bdf8" */
+  border-radius: 8px;
+  transition: width 0.5s ease-out;
+}
