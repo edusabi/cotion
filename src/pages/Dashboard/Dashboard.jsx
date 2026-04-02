@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import axios from "axios";
 import styles from "./Dashboard.module.css";
 import { FiStar, FiAlertCircle, FiTrash2, FiPrinter, FiFileText, FiLink, FiMessageCircle } from "react-icons/fi";
@@ -61,40 +63,40 @@ const Dashboard = () => {
 
   // 🔥 NOVA FUNÇÃO: Gerar Link da Vitrine Pública
   const gerarLinkVitrine = async () => {
-  try {
-    if (!user?.id) return alert("Erro ao carregar usuário");
+    try {
+      if (!user?.id) return alert("Erro ao carregar usuário");
 
-    let slug = user.slug;
+      let slug = user.slug;
 
-    // 🔥 cria se não existir
-    if (!slug) {
-      const res = await axios.post(`${API_URL}/api/create-slug`, {
-        userId: user.id,
-        nome: user.name || "minhaloja"
-      });
+      // 🔥 cria se não existir
+      if (!slug) {
+        const res = await axios.post(`${API_URL}/api/create-slug`, {
+          userId: user.id,
+          nome: user.name || "minhaloja"
+        });
 
-      slug = res.data.slug;
+        slug = res.data.slug;
 
-      // atualiza estado
-      setUser(prev => ({ ...prev, slug }));
+        // atualiza estado
+        setUser(prev => ({ ...prev, slug }));
+      }
+
+      const zap = prompt("Digite seu WhatsApp com DDD:");
+      if (!zap) return;
+
+      const numero = zap.replace(/\D/g, "");
+
+      const link = `${window.location.origin}/vitrine/${slug}?w=55${numero}`;
+
+      navigator.clipboard.writeText(link);
+
+      alert("✅ Link copiado:\n\n" + link);
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao gerar link");
     }
-
-    const zap = prompt("Digite seu WhatsApp com DDD:");
-    if (!zap) return;
-
-    const numero = zap.replace(/\D/g, "");
-
-    const link = `${window.location.origin}/vitrine/${slug}?w=55${numero}`;
-
-    navigator.clipboard.writeText(link);
-
-    alert("✅ Link copiado:\n\n" + link);
-
-  } catch (err) {
-    console.error(err);
-    alert("Erro ao gerar link");
-  }
-};
+  };
 
   // 🔥 NOVA FUNÇÃO: Enviar Orçamento Rápido via WhatsApp
   const enviarParaWhatsApp = (prod) => {
@@ -243,6 +245,45 @@ const Dashboard = () => {
     XLSX.writeFile(workbook, "relatorio_multicanal.xlsx");
   };
 
+  // 🔥 NOVA FUNÇÃO: Gerar PDF direto (Substitui o window.print falho)
+  const exportarPDF = () => {
+    if (produtos.length === 0) return alert("Adicione produtos primeiro.");
+
+    const doc = new jsPDF("landscape"); 
+
+    doc.text("Relatório de Precificação Multi-Canal", 14, 15);
+
+    const tableColumn = ["Produto", "Custo Base", "Preço Padrão", ...CANAIS_MARKETPLACE.map(c => c.nome)];
+    const tableRows = [];
+
+    produtos.forEach(prod => {
+      const calcPadrao = calcularResultados(prod);
+      
+      const rowData = [
+        prod.nome,
+        `R$ ${((prod.custo_raw + prod.frete_raw) / 100).toFixed(2)}`,
+        `R$ ${calcPadrao.precoIdeal.toFixed(2)}`
+      ];
+
+      CANAIS_MARKETPLACE.forEach(canal => {
+        const calcCanal = calcularPrecoCanal(prod, canal);
+        rowData.push(`R$ ${calcCanal.precoIdeal.toFixed(2)}`);
+      });
+
+      tableRows.push(rowData);
+    });
+
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      styles: { fontSize: 8 }, 
+      headStyles: { fillColor: [41, 128, 185] } 
+    });
+
+    doc.save("relatorio_multicanal.pdf");
+  };
+
   if (loading) return <div className={styles.container}>Carregando sistema...</div>;
 
   return (
@@ -278,7 +319,6 @@ const Dashboard = () => {
         <p>Cadastre seus produtos, calcule margens e exporte seus relatórios.</p>
         
         <div className={styles.acoesTop}>
-          {/* BOTÃO DA VITRINE */}
           <button onClick={gerarLinkVitrine} style={{ background: '#25D366', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FiLink /> Criar Minha Vitrine
           </button>
@@ -286,7 +326,8 @@ const Dashboard = () => {
           <button onClick={exportarExcel} className={styles.btnSecundario} disabled={produtos.length === 0}>
             <FiFileText /> Baixar Excel
           </button>
-          <button onClick={() => window.print()} className={styles.btnSecundario} disabled={produtos.length === 0}>
+          {/* 🔥 BOTÃO PDF ATUALIZADO AQUI */}
+          <button onClick={exportarPDF} className={styles.btnSecundario} disabled={produtos.length === 0}>
             <FiPrinter /> Salvar PDF
           </button>
         </div>
@@ -366,7 +407,6 @@ const Dashboard = () => {
                     </div>
 
                     <div className={styles.prodAcoes}>
-                      {/* BOTÃO ENVIAR ORÇAMENTO WPP */}
                       <button onClick={() => enviarParaWhatsApp(prod)} className={styles.btnZap} title="Enviar Orçamento WhatsApp">
                         <FiMessageCircle /> Orçar
                       </button>
@@ -434,38 +474,6 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-
-      <div className={styles.apenasImpressao}>
-        <h2>Relatório de Precificação Multi-Canal</h2>
-        <table className={styles.tabelaImpressao}>
-          <thead>
-            <tr>
-              <th>Produto</th>
-              <th>Custo Base</th>
-              <th>Preço Padrão</th>
-              {CANAIS_MARKETPLACE.map((canal, idx) => (
-                <th key={idx}>{canal.nome}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {produtos.map(prod => {
-              const calcPadrao = calcularResultados(prod);
-              return (
-                <tr key={prod.id}>
-                  <td>{prod.nome}</td>
-                  <td>R$ {((prod.custo_raw + prod.frete_raw)/100).toFixed(2)}</td>
-                  <td><strong>R$ {calcPadrao.precoIdeal.toFixed(2)}</strong></td>
-                  {CANAIS_MARKETPLACE.map((canal, idx) => {
-                    const calcCanal = calcularPrecoCanal(prod, canal);
-                    return <td key={idx}>R$ {calcCanal.precoIdeal.toFixed(2)}</td>;
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };
