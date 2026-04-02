@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 import axios from "axios";
 import styles from "./Dashboard.module.css";
 import { FiStar, FiAlertCircle, FiTrash2, FiPrinter, FiFileText, FiLink, FiMessageCircle } from "react-icons/fi";
@@ -246,6 +246,7 @@ const Dashboard = () => {
   };
 
   // 🔥 NOVA FUNÇÃO: Gerar PDF direto (Substitui o window.print falho)
+  // 🔥 NOVA FUNÇÃO: Gerar PDF direto corrigida
   const exportarPDF = () => {
     if (produtos.length === 0) return alert("Adicione produtos primeiro.");
 
@@ -273,7 +274,8 @@ const Dashboard = () => {
       tableRows.push(rowData);
     });
 
-    doc.autoTable({
+    // 👇 A MUDANÇA ESTÁ AQUI 👇
+    autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 20,
