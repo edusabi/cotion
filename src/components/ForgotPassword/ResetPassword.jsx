@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../../pages/Login/Login.module.css"; 
 
-// 🔥 ADICIONE A URL DO SEU BACKEND AQUI TAMBÉM
 const API_URL = process.env.REACT_APP_API_URL || "https://cotion.discloud.app";
 
 export default function ResetPassword() {
@@ -22,7 +21,6 @@ export default function ResetPassword() {
     }
 
     try {
-      // 🔥 AQUI TAMBÉM: Coloque o API_URL
       await axios.post(`${API_URL}/auth/reset_password`, { 
         id, 
         token, 
@@ -38,7 +36,12 @@ export default function ResetPassword() {
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleUpdatePassword} className={styles.card}>
+      <form 
+        onSubmit={handleUpdatePassword} 
+        className={styles.card}
+        /* 🔥 ESTILO INJETADO AQUI NO JSX */
+        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+      >
         <h2>Criar Nova Senha</h2>
         
         <input 
