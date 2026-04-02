@@ -30,9 +30,9 @@ export default function NavBar() {
         {!user ? (
           <>
             <Link to="/" onClick={closeMenu}>Home</Link>
+            <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
             <Link to="/sobre" onClick={closeMenu}>Sobre</Link>
             <Link to="/contato" onClick={closeMenu}>Contato</Link>
-            <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
             <Link to="/login" onClick={closeMenu}>Login</Link>
             <Link to="/registro" onClick={closeMenu}>Registro</Link>
           </>
