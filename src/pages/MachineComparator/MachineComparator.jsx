@@ -136,7 +136,7 @@ const MachineComparator = () => {
             <p>Assine o Premium e libere o Simulador Multi-Canais que diz o preço exato que você deve cobrar no Mercado Livre, Shopee e Instagram para ter lucro garantido.</p>
           </div>
         </div>
-        <button onClick={() => window.location.href = '/checkout'} className={styles.upsellBtn}>
+        <button onClick={() => window.location.href = '/login '} className={styles.upsellBtn}>
           Quero o Premium <FiArrowRight />
         </button>
       </div>

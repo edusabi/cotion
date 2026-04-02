@@ -13,16 +13,16 @@
   align-items: center;
   gap: 10px;
   font-size: 24px;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .titleIcon {
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 .header p {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
@@ -34,11 +34,11 @@
 }
 
 .calculatorCard, .resultPanel {
-  background: white;
+  background: var(--panel);
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
 }
 
 .inputGroup {
@@ -50,22 +50,28 @@
 .inputGroup label {
   font-weight: 600;
   margin-bottom: 8px;
-  color: #334155;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .inputGroup input {
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 16px;
   transition: all 0.2s;
 }
 
+.inputGroup input::placeholder {
+  color: color-mix(in srgb, var(--text-secondary) 50%, transparent);
+}
+
 .inputGroup input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .emptyState {
@@ -75,7 +81,7 @@
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-secondary);
   gap: 16px;
 }
 
@@ -88,10 +94,10 @@
 .financialSummary {
   display: flex;
   justify-content: space-between;
-  background: #f8fafc;
+  background: var(--bg-primary);
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
 }
 
 .summaryItem {
@@ -101,7 +107,7 @@
 
 .summaryItem span {
   font-size: 13px;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -124,7 +130,7 @@
 }
 
 .alertBox p {
-  color: #334155;
+  color: var(--text-primary);
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
@@ -132,15 +138,16 @@
 
 /* BANNER DE UPSELL */
 .upsellBanner {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(135deg, var(--panel) 0%, var(--bg-primary) 100%);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   border-radius: 12px;
   padding: 24px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
 .upsellInfo {
@@ -151,26 +158,26 @@
 
 .upsellIcon {
   font-size: 40px;
-  color: #fbbf24;
+  color: #fbbf24; /* Mantive o amarelo ouro/âmbar pois remete a "Premium/Cadeado" */
   flex-shrink: 0;
 }
 
 .upsellInfo h3 {
   font-size: 18px;
   margin-bottom: 6px;
-  color: white;
+  color: var(--text-primary);
 }
 
 .upsellInfo p {
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-size: 14px;
   margin: 0;
   line-height: 1.5;
 }
 
 .upsellBtn {
-  background: #3b82f6;
-  color: white;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  color: var(--bg-primary);
   border: none;
   padding: 14px 24px;
   border-radius: 8px;
@@ -181,11 +188,12 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: transform 0.2s ease, filter 0.2s;
 }
 
 .upsellBtn:hover {
-  background: #2563eb;
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
 /* Responsividade Básica */
