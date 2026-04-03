@@ -24,6 +24,22 @@ const Vitrine = () => {
     if (carrinho.length === 0) setIsCartOpen(false);
   }, [carrinho]);
 
+  // 🔥 BÔNUS: Ajusta o título da aba e força o favicon na raiz
+  useEffect(() => {
+    // 1. Muda o nome da aba do navegador para o nome da loja
+    document.title = loja?.name ? `${loja.name} | Vitrine` : "Cotion - Vitrine";
+
+    // 2. Força o navegador a pegar o favicon da raiz do site
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = '/favicon.ico'; // A barra aqui é o segredo!
+    
+  }, [loja]);
+
   useEffect(() => {
     const fetchVitrine = async () => {
       try {
