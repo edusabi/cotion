@@ -26,9 +26,10 @@ export default function NavBar() {
       {/* Div do menu. A classe 'open' é injetada se isOpen for true */}
       <div className={`${styles.menu} ${isOpen ? styles.open : ""}`}>
         
-        {/* 🔥 A MUDANÇA ESTÁ AQUI: Se estiver carregando, não mostra os links ainda, 
-            mas a logo e a barra já estão desenhadas na tela! */}
         {loading ? null : !user ? (
+          /* ==========================================
+             1. USUÁRIO DESLOGADO (VISITANTE)
+             ========================================== */
           <>
             <Link to="/" onClick={closeMenu}>Home</Link>
             <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
@@ -37,7 +38,10 @@ export default function NavBar() {
             <Link to="/login" onClick={closeMenu}>Login</Link>
             <Link to="/registro" onClick={closeMenu}>Registro</Link>
           </>
-        ) : (
+        ) : user.is_premium ? (
+          /* ==========================================
+             2. USUÁRIO LOGADO E PREMIUM (ACESSO TOTAL)
+             ========================================== */
           <>
             <Link to="/dashboard" onClick={closeMenu}>Home</Link>
             <Link to="/caixaDiario" onClick={closeMenu}>Caixa</Link>
@@ -48,6 +52,23 @@ export default function NavBar() {
             <FiLogOut 
               onClick={() => { logout(); closeMenu(); }} 
               className={styles.iconLogout}
+              title="Sair"
+            />
+          </>
+        ) : (
+          /* ==========================================
+             3. USUÁRIO LOGADO MAS GRATUITO (LIMITADO)
+             ========================================== */
+          <>
+            <Link to="/" onClick={closeMenu}>Home</Link>
+            <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
+            <Link to="/sobre" onClick={closeMenu}>Sobre</Link>
+            <Link to="/contato" onClick={closeMenu}>Contato</Link>
+            {/* Você pode até adicionar um link de upgrade aqui depois, ex: <Link to="/#inscreva">Seja Premium</Link> */}
+            <FiLogOut 
+              onClick={() => { logout(); closeMenu(); }} 
+              className={styles.iconLogout}
+              title="Sair"
             />
           </>
         )}
