@@ -5,42 +5,26 @@ import styles from "./NavBar.module.css";
 import { FiLogOut, FiMenu, FiX } from "react-icons/fi"; 
 
 export default function NavBar() {
-  const { user, logout, loading } = useAuth();
+  const { user, logout } = useAuth(); // Removemos o loading daqui para não travar a tela
   const [isOpen, setIsOpen] = useState(false); 
 
-  // Função para alternar o menu
   const toggleMenu = () => setIsOpen(!isOpen);
-
-  // Função para fechar o menu ao clicar em um link (apenas no mobile)
   const closeMenu = () => setIsOpen(false);
 
   return (
     <nav className={styles.navbar} id="menu-principal">
       <img src="logo_grande.png" alt="Logo" width="150px" />
 
-      {/* Botão de Toggle visível apenas no mobile */}
       <div className={styles.toggleButton} onClick={toggleMenu}>
         {isOpen ? <FiX /> : <FiMenu />}
       </div>
 
-      {/* Div do menu. A classe 'open' é injetada se isOpen for true */}
       <div className={`${styles.menu} ${isOpen ? styles.open : ""}`}>
         
-        {loading ? null : !user ? (
+        {/* 🔥 SEM DELAY: Renderiza os menus diretos com base no usuário */}
+        {user?.is_premium ? (
           /* ==========================================
-             1. USUÁRIO DESLOGADO (VISITANTE)
-             ========================================== */
-          <>
-            <Link to="/" onClick={closeMenu}>Home</Link>
-            <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
-            <Link to="/sobre" onClick={closeMenu}>Sobre</Link>
-            <Link to="/contato" onClick={closeMenu}>Contato</Link>
-            <Link to="/login" onClick={closeMenu}>Login</Link>
-            <Link to="/registro" onClick={closeMenu}>Registro</Link>
-          </>
-        ) : user.is_premium ? (
-          /* ==========================================
-             2. USUÁRIO LOGADO E PREMIUM (ACESSO TOTAL)
+             1. USUÁRIO LOGADO E PREMIUM (ACESSO TOTAL)
              ========================================== */
           <>
             <Link to="/dashboard" onClick={closeMenu}>Home</Link>
@@ -55,21 +39,32 @@ export default function NavBar() {
               title="Sair"
             />
           </>
-        ) : (
+        ) : user ? (
           /* ==========================================
-             3. USUÁRIO LOGADO MAS GRATUITO (LIMITADO)
+             2. USUÁRIO LOGADO MAS GRATUITO (LIMITADO)
              ========================================== */
           <>
             <Link to="/" onClick={closeMenu}>Home</Link>
             <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
             <Link to="/sobre" onClick={closeMenu}>Sobre</Link>
             <Link to="/contato" onClick={closeMenu}>Contato</Link>
-            {/* Você pode até adicionar um link de upgrade aqui depois, ex: <Link to="/#inscreva">Seja Premium</Link> */}
             <FiLogOut 
               onClick={() => { logout(); closeMenu(); }} 
               className={styles.iconLogout}
               title="Sair"
             />
+          </>
+        ) : (
+          /* ==========================================
+             3. VISITANTE DESLOGADO (Padrão ao carregar)
+             ========================================== */
+          <>
+            <Link to="/" onClick={closeMenu}>Home</Link>
+            <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
+            <Link to="/sobre" onClick={closeMenu}>Sobre</Link>
+            <Link to="/contato" onClick={closeMenu}>Contato</Link>
+            <Link to="/login" onClick={closeMenu}>Login</Link>
+            <Link to="/registro" onClick={closeMenu}>Registro</Link>
           </>
         )}
       </div>
