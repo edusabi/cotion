@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { FiActivity, FiAlertTriangle, FiCheckCircle, FiLock, FiArrowRight, FiXOctagon } from "react-icons/fi";
+// 🔥 IMPORTAMOS O SEU CONTEXTO DE AUTENTICAÇÃO AQUI
+import { useAuth } from "../../context/AuthContext"; 
 import styles from "./MachineComparator.module.css";
 
 const MachineComparator = () => {
+  // 🔥 PUXAMOS O USUÁRIO DO CONTEXTO
+  const { user } = useAuth();
+
   // Estados simples e diretos para a isca gratuita
   const [precoVenda, setPrecoVenda] = useState("");
   const [custoProduto, setCustoProduto] = useState("");
@@ -127,19 +132,22 @@ const MachineComparator = () => {
         </div>
       </div>
 
-      {/* GATILHO PARA O UPSELL (PREMIUM) */}
-      <div className={styles.upsellBanner}>
-        <div className={styles.upsellInfo}>
-          <FiLock className={styles.upsellIcon} />
-          <div>
-            <h3>Pare de chutar preços. Tenha certeza matemática.</h3>
-            <p>Assine o Premium e libere o Simulador Multi-Canais que diz o preço exato que você deve cobrar no Mercado Livre, Shopee e Instagram para ter lucro garantido.</p>
+      {/* 🔥 ESCONDEMOS A MENSAGEM SE O USUÁRIO JÁ FOR PREMIUM */}
+      {!user?.is_premium && (
+        <div className={styles.upsellBanner}>
+          <div className={styles.upsellInfo}>
+            <FiLock className={styles.upsellIcon} />
+            <div>
+              <h3>Pare de chutar preços. Tenha certeza matemática.</h3>
+              <p>Assine o Premium e libere o Simulador Multi-Canais que diz o preço exato que você deve cobrar no Mercado Livre, Shopee e Instagram para ter lucro garantido.</p>
+            </div>
           </div>
+          <button onClick={() => window.location.href = '/login '} className={styles.upsellBtn}>
+            Quero o Premium <FiArrowRight />
+          </button>
         </div>
-        <button onClick={() => window.location.href = '/login '} className={styles.upsellBtn}>
-          Quero o Premium <FiArrowRight />
-        </button>
-      </div>
+      )}
+
     </div>
   );
 };
