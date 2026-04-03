@@ -2,13 +2,11 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import styles from "./NavBar.module.css";
-import { FiLogOut, FiMenu, FiX } from "react-icons/fi"; // Importando os novos ícones
+import { FiLogOut, FiMenu, FiX } from "react-icons/fi"; 
 
 export default function NavBar() {
   const { user, logout, loading } = useAuth();
-  const [isOpen, setIsOpen] = useState(false); // Estado para controlar o menu
-
-  if (loading) return null;
+  const [isOpen, setIsOpen] = useState(false); 
 
   // Função para alternar o menu
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -27,7 +25,10 @@ export default function NavBar() {
 
       {/* Div do menu. A classe 'open' é injetada se isOpen for true */}
       <div className={`${styles.menu} ${isOpen ? styles.open : ""}`}>
-        {!user ? (
+        
+        {/* 🔥 A MUDANÇA ESTÁ AQUI: Se estiver carregando, não mostra os links ainda, 
+            mas a logo e a barra já estão desenhadas na tela! */}
+        {loading ? null : !user ? (
           <>
             <Link to="/" onClick={closeMenu}>Home</Link>
             <Link to="/calculadora" onClick={closeMenu}>Raio-X</Link>
