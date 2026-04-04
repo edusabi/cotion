@@ -320,3 +320,69 @@
     font-size: 0.85rem;
   }
 }
+
+/* --- BOTÕES DE COMPARTILHAMENTO --- */
+.headerMensal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Para não quebrar no celular */
+  gap: 15px;
+}
+
+.headerMensal h3 {
+  margin-bottom: 0; /* Remove a margem original para alinhar com os botões */
+}
+
+.botoesCompartilhar {
+  display: flex;
+  gap: 10px;
+}
+
+.btnCompartilhar {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btnCompartilhar:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.bgZap {
+  background-color: #25D366;
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
+}
+
+.bgEmail {
+  background-color: #3b82f6;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+}
+
+/* Responsividade para os botões no celular */
+@media (max-width: 480px) {
+  .headerMensal {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .botoesCompartilhar {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .btnCompartilhar {
+    justify-content: center;
+    width: 100%;
+  }
+}

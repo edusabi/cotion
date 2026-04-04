@@ -10,7 +10,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Nomes dos meses para deixar bonito (Ex: 04 vira "Abril")
 const NOME_MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
 const CaixaDiario = () => {
@@ -97,7 +96,6 @@ const CaixaDiario = () => {
     }
   };
 
-  // 🔥 LÓGICA DO RESUMO MENSAL
   const resumoMensal = useMemo(() => {
     const resumo = {};
 
@@ -122,14 +120,38 @@ const CaixaDiario = () => {
       resumo[chave].lucro += Number(lucroDoDia);
     });
 
-    // Transforma objeto em array e ordena do mais recente para o mais antigo (Para a Tabela)
     return Object.values(resumo).sort((a, b) => b.ordenacao - a.ordenacao);
   }, [registros]);
 
-  // Dados para o Gráfico: precisamos inverter a ordem (do mais antigo para o mais novo) para a linha do tempo ficar certa
   const dadosGrafico = useMemo(() => {
     return [...resumoMensal].sort((a, b) => a.ordenacao - b.ordenacao);
   }, [resumoMensal]);
+
+  // 🔥 NOVAS FUNÇÕES DE COMPARTILHAMENTO
+  const gerarTextoRelatorio = () => {
+    let texto = "📊 *Resumo de Faturamento Mensal*\n\n";
+    
+    resumoMensal.forEach(mes => {
+      texto += `📅 *${mes.mesAnoExibicao}*\n`;
+      texto += `📈 Vendas: R$ ${mes.vendas.toFixed(2)}\n`;
+      texto += `📉 Gastos: R$ ${mes.gastos.toFixed(2)}\n`;
+      texto += `💰 Lucro: R$ ${mes.lucro.toFixed(2)}\n\n`;
+    });
+    
+    texto += "Gerado pelo Sistema de Caixa";
+    return encodeURIComponent(texto); // Codifica para formato de URL
+  };
+
+  const compartilharWhatsApp = () => {
+    const texto = gerarTextoRelatorio();
+    window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
+  };
+
+  const compartilharEmail = () => {
+    const texto = gerarTextoRelatorio();
+    const assunto = encodeURIComponent("Relatório de Faturamento Mensal");
+    window.open(`mailto:?subject=${assunto}&body=${texto}`, '_blank');
+  };
 
   if (loading) return <div className={styles.loading}>Carregando caixa...</div>;
 
@@ -168,7 +190,6 @@ const CaixaDiario = () => {
         </form>
       </section>
 
-      {/* 🔥 1º - SEÇÃO HISTÓRICO DIÁRIO (Agora vem primeiro) */}
       <section className={styles.listCard}>
         <h3>📊 Histórico de Fechamentos (Diário)</h3>
         <div className={styles.tabelaWrapper}>
@@ -248,10 +269,21 @@ const CaixaDiario = () => {
         </div>
       </section>
 
-      {/* 🔥 2º - NOVA SEÇÃO: GRÁFICO E TABELA MENSAL */}
       {resumoMensal.length > 0 && (
         <section className={styles.listCard} style={{ marginBottom: "2rem" }}>
-          <h3>📅 Faturamento Mensal</h3>
+          
+          {/* 🔥 NOVO CABEÇALHO COM BOTÕES DE COMPARTILHAR */}
+          <div className={styles.headerMensal}>
+            <h3>📅 Faturamento Mensal</h3>
+            <div className={styles.botoesCompartilhar}>
+              <button onClick={compartilharWhatsApp} className={`${styles.btnCompartilhar} ${styles.bgZap}`}>
+                📱 Enviar Zap
+              </button>
+              <button onClick={compartilharEmail} className={`${styles.btnCompartilhar} ${styles.bgEmail}`}>
+                ✉️ Enviar E-mail
+              </button>
+            </div>
+          </div>
           
           {/* GRÁFICO RECHARTS */}
           <div className={styles.chartContainer}>
