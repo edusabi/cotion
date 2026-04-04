@@ -127,7 +127,7 @@ const CaixaDiario = () => {
     return [...resumoMensal].sort((a, b) => a.ordenacao - b.ordenacao);
   }, [resumoMensal]);
 
-  // 🔥 NOVAS FUNÇÕES DE COMPARTILHAMENTO
+  // 🔥 FUNÇÕES DE COMPARTILHAMENTO ATUALIZADAS
   const gerarTextoRelatorio = () => {
     let texto = "📊 *Resumo de Faturamento Mensal*\n\n";
     
@@ -144,13 +144,15 @@ const CaixaDiario = () => {
 
   const compartilharWhatsApp = () => {
     const texto = gerarTextoRelatorio();
+    // WhatsApp funciona bem com _blank porque abre uma página web (api.whatsapp.com)
     window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
   };
 
   const compartilharEmail = () => {
     const texto = gerarTextoRelatorio();
     const assunto = encodeURIComponent("Relatório de Faturamento Mensal");
-    window.open(`mailto:?subject=${assunto}&body=${texto}`, '_blank');
+    // CORREÇÃO: Usar window.location.href em vez de window.open para evitar a aba em branco fantasma
+    window.location.href = `mailto:?subject=${assunto}&body=${texto}`;
   };
 
   if (loading) return <div className={styles.loading}>Carregando caixa...</div>;
