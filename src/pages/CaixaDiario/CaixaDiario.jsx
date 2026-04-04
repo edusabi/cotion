@@ -6,7 +6,7 @@ import {
 import styles from "./CaixaDiario.module.css";
 
 const api = axios.create({
-  baseURL: "api/cash/",
+  baseURL: "/api/cash/",
   withCredentials: true,
 });
 
