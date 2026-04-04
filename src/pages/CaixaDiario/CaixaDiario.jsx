@@ -138,7 +138,7 @@ const CaixaDiario = () => {
       texto += `💰 Lucro: R$ ${mes.lucro.toFixed(2)}\n\n`;
     });
     
-    texto += "Gerado pelo Sistema de Caixa";
+    texto += "Gerado pelo Sistema do Cotion ";
     return encodeURIComponent(texto); // Codifica para formato de URL
   };
 
@@ -277,10 +277,10 @@ const CaixaDiario = () => {
             <h3>📅 Faturamento Mensal</h3>
             <div className={styles.botoesCompartilhar}>
               <button onClick={compartilharWhatsApp} className={`${styles.btnCompartilhar} ${styles.bgZap}`}>
-                📱 Enviar Zap
+                📱 Enviar via Whatsapp
               </button>
               <button onClick={compartilharEmail} className={`${styles.btnCompartilhar} ${styles.bgEmail}`}>
-                ✉️ Enviar E-mail
+                ✉️ Enviar por E-mail
               </button>
             </div>
           </div>
