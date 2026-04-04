@@ -6,7 +6,7 @@ import axios from "axios";
 import styles from "./Dashboard.module.css";
 import { FiStar, FiAlertCircle, FiTrash2, FiPrinter, FiFileText, FiLink, FiMessageCircle } from "react-icons/fi";
 
-const API_URL = "https://cotion.discloud.app"; 
+const API_URL = "/api"; 
 
 const Dashboard = () => {
   const [produtos, setProdutos] = useState([]);

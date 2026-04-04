@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
 
-const API_URL = "https://cotion.discloud.app"; // Lembre-se de mudar para sua URL real no deploy
+const API_URL = "/api"; // Lembre-se de mudar para sua URL real no deploy
 
 const messages = [
   "💰 Pare de dar o seu lucro para as taxas: saiba exatamente para onde vai o seu dinheiro.",

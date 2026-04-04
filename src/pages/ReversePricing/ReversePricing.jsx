@@ -16,7 +16,7 @@ const ReversePricing = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://cotion.discloud.app/products", { withCredentials: true });
+        const response = await axios.get("/api/products", { withCredentials: true });
         setProducts(response.data);
       } catch (err) {
         console.error("Erro ao buscar produtos", err);
@@ -33,7 +33,7 @@ const ReversePricing = () => {
 
     try {
       const response = await axios.post(
-        "https://cotion.discloud.app/products/reverse_pricing",
+        "/api/products/reverse_pricing",
         {
           productId: selectedProductId,
           precoConcorrente: competitorPrice,

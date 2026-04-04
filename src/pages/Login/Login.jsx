@@ -89,7 +89,8 @@ export default function Login() {
               placeholder="Seu e-mail"
               className={styles.input}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              // 🔥 CORREÇÃO: Força minúscula e remove espaços vazios
+              onChange={(e) => setEmail(e.target.value.trim().toLowerCase())} 
             />
             {errors.email && <span className={styles.error}>{errors.email}</span>}
           </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import styles from "../../pages/Login/Login.module.css"; 
 
-const API_URL = process.env.REACT_APP_API_URL || "https://cotion.discloud.app";
+const API_URL = process.env.REACT_APP_API_URL || "/api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

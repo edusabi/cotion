@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
     );
 
     // depois do login, pega o usuário
-    const me = await axios.get("https://cotion.discloud.app/me", {
+    const me = await axios.get("/api/me", {
       withCredentials: true
     });
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
 
   // 🚪 logout
   async function logout() {
-    await axios.post("https://cotion.discloud.app/auth/logout", {}, {
+    await axios.post("/api/auth/logout", {}, {
       withCredentials: true
     });
 

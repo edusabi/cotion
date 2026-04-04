@@ -4,7 +4,7 @@ import axios from "axios";
 import { FiShoppingCart, FiMinus, FiPlus, FiSend, FiX, FiUser } from "react-icons/fi";
 import styles from "./Vitrine.module.css";
 
-const API_URL = "https://cotion.discloud.app";
+const API_URL = "/api";
 
 const Vitrine = () => {
   const { userId } = useParams();
