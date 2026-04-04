@@ -32,9 +32,16 @@ const CaixaDiario = () => {
   const buscarRegistros = async () => {
     try {
       const { data } = await api.get("/");
-      setRegistros(data);
+      // 🔥 CORREÇÃO: Verifica se 'data' é realmente um array antes de salvar
+      if (Array.isArray(data)) {
+        setRegistros(data);
+      } else {
+        console.warn("A API não retornou uma lista válida:", data);
+        setRegistros([]); // Força ser um array vazio se der erro
+      }
     } catch (err) {
       console.error("Erro ao buscar registros:", err);
+      setRegistros([]); // Zera a lista em caso de erro de rede
     } finally {
       setLoading(false);
     }
@@ -97,9 +104,15 @@ const CaixaDiario = () => {
   };
 
   const resumoMensal = useMemo(() => {
+    // 🔥 CORREÇÃO: Trava de segurança. Se não for array, retorna array vazio e para por aqui.
+    if (!Array.isArray(registros)) return [];
+
     const resumo = {};
 
     registros.forEach(reg => {
+      // Prevenção extra caso o dado venha sem data
+      if (!reg.data) return; 
+
       const [ano, mes] = reg.data.split('-'); 
       const chave = `${ano}-${mes}`;
 
@@ -115,17 +128,13 @@ const CaixaDiario = () => {
 
       const lucroDoDia = reg.lucro !== undefined ? reg.lucro : (reg.vendas_total - reg.gastos_total);
 
-      resumo[chave].vendas += Number(reg.vendas_total);
-      resumo[chave].gastos += Number(reg.gastos_total);
-      resumo[chave].lucro += Number(lucroDoDia);
+      resumo[chave].vendas += Number(reg.vendas_total) || 0;
+      resumo[chave].gastos += Number(reg.gastos_total) || 0;
+      resumo[chave].lucro += Number(lucroDoDia) || 0;
     });
 
     return Object.values(resumo).sort((a, b) => b.ordenacao - a.ordenacao);
   }, [registros]);
-
-  const dadosGrafico = useMemo(() => {
-    return [...resumoMensal].sort((a, b) => a.ordenacao - b.ordenacao);
-  }, [resumoMensal]);
 
   const gerarTextoRelatorio = () => {
     let texto = "📊 *Resumo de Faturamento Mensal*\n\n";
