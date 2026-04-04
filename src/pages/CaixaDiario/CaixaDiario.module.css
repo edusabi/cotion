@@ -1,211 +1,65 @@
-/* CaixaDiario.module.css */
+/* =======================================================
+   CaixaDiario.module.css - ARQUIVO COMPLETO E DEFINITIVO
+   ======================================================= */
 
+/* --- VARIÁVEIS LOCAIS E CONTAINER PRINCIPAL --- */
 .container {
+  --accent: #34d399;     /* Turquesa/Verde Claro */
+  --accent-2: #10b981;   /* Verde Escuro */
+  --border: #1e293b;     /* Azul escuro (bordas) */
+  --bg-dark: #0f172a;    /* Fundo dos inputs */
+  --text-main: #f8fafc;  /* Texto claro */
+  --text-muted: #94a3b8; /* Texto cinza */
+  --red-alert: #ef4444;  /* Vermelho para gastos/negativo */
+  
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding: 40px 20px;
-  gap: 5rem;
+  gap: 3rem;
 }
 
-/* Card de Input Principal (O Glassmorphism da image_1.png) */
-.formCard {
-  background: rgba(17, 25, 40, 0.75); /* Mais escuro e transparente */
-  border: 1px solid rgba(56, 189, 248, 0.25) !important;
-  padding: 40px;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 700px;
-  backdrop-filter: blur(12px);
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.formCard h2 {
-  margin-bottom: 8px;
-  color: #f8fafc;
-  font-size: 1.6rem;
-}
-
-.subtitle {
-  color: #94a3b8;
-  margin-bottom: 25px;
-  font-size: 0.95rem;
-}
-
-.formInline {
-  display: flex;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 15px;
-  margin-top: 20px;
-  align-items: center;
-}
-
-/* --- O ESTILO BONITO DOS INPUTS (Baseado na image_2.png) --- */
-.inputField,
-.inputEdicao,
-.inputFormCard {
-  padding: 14px 16px;
-  border-radius: 10px;
-  border: 1px solid #2d3748; /* Borda escura e sólida */
-  background-color: #171e2e; /* Fundo escuro e sólido do input */
-  color: #f8fafc;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  width: 100%;
-}
-
-/* Efeito de Focus bonitão com a cor turquesa */
-.inputField:focus,
-.inputEdicao:focus,
-.inputFormCard:focus {
-  outline: none;
-  border-color: #1abc9c; /* Turquesa da Meta Atingida */
-  box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.15);
-}
-
-/* Placeholder cinza suave */
-.inputField::placeholder {
-  color: #4a5568;
-}
-
-/* --- BOTÃO BONITO (Gradiente da image_2.png) --- */
-.btnPrincipal {
-  padding: 14px 24px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #0b1120; /* Texto escuro sobre o fundo claro */
-  
-  /* Gradiente turquesa para verde alface */
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.btnPrincipal:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(52, 211, 153, 0.3);
-}
-
-.btnPrincipal:active {
-  transform: translateY(1px);
-}
-
-/* --- ÁREA DE FEEDBACK (A Dor e o Prazer da image_0.png) --- */
-.feedbackCard {
-  margin-top: 25px;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  text-align: left;
-}
-
-/* Estilo para quando a meta for atingida (O Prazer) */
-.goodFeedback {
-  background-color: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.2);
-}
-
-.goodFeedback h3 {
-  color: #34d399; /* Verde alface */
-  margin-bottom: 4px;
-}
-
-/* Estilo para quando a meta não for atingida (A Dor) */
-.badFeedback {
-  background-color: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.2);
-}
-
-.badFeedback h3 {
-  color: #f87171; /* Vermelho alerta */
-  margin-bottom: 4px;
-}
-
-.badFeedback p, .goodFeedback p {
-  color: #e2e8f0;
-  font-size: 0.9rem;
-}
-
-/* Tabela de Histórico (Seguindo a estética) */
-.listCard {
-  background: rgba(17, 25, 40, 0.5);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  padding: 30px;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 900px;
-  backdrop-filter: blur(10px);
-}
-
-.listCard h3 {
-  color: #f8fafc;
-  margin-bottom: 20px;
-}
-
-.tabela {
-  width: 100%;
-  border-collapse: collapse;
-  color: #e2e8f0;
-}
-
-.tabela th {
-  text-align: left;
-  padding: 12px;
-  color: #94a3b8;
-  border-bottom: 1px solid #2d3748;
-  font-size: 0.85rem;
-}
-
-.tabela td {
-  padding: 16px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.acoes {
-  display: flex;
-  gap: 10px;
-}
-
-.btnIcon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-  font-size: 1.1rem;
-}
-
-.btnIcon:hover {
-  opacity: 1;
-}
-
-@media (max-width: 768px) {
-  .formInline {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-/* Container do formulário (Card principal) */
-.formCard {
+/* --- CARDS GERAIS (Glassmorphism) --- */
+.formCard, .listCard {
   background: rgba(30, 41, 59, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 40px;
   border-radius: 16px;
   width: 100%;
-  max-width: 800px; /* Um pouco mais largo para a linha ficar bonita */
   backdrop-filter: blur(10px);
+}
+
+.formCard {
+  max-width: 800px;
   text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   margin: 0 auto;
 }
 
+.listCard {
+  max-width: 900px;
+}
+
+.formCard h2 {
+  color: var(--text-main);
+  margin-bottom: 8px;
+  font-size: 1.6rem;
+}
+
+.listCard h3 {
+  color: var(--text-main);
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+/* --- FORMULÁRIOS E INPUTS --- */
 .formInline {
   display: flex;
   gap: 15px;
@@ -214,46 +68,48 @@
   justify-content: center;
 }
 
-/* --- OS INPUTS ESTILO DARK (O segredo está aqui) --- */
-.inputField {
+.inputField, .inputFormCard {
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid #1e293b; /* Cor da borda do seu dashboard */
-  background: #0f172a;      /* Fundo escuro sólido */
-  color: #f8fafc;           /* Texto quase branco */
+  border: 1px solid var(--border);
+  background: var(--bg-dark);
+  color: var(--text-main);
   font-size: 1rem;
-  transition: 0.2s;
-  flex: 1;                  /* Faz os inputs crescerem por igual */
+  transition: all 0.2s ease;
+  flex: 1;
   min-width: 120px;
+  width: 100%;
 }
 
-/* Tira aquele ícone branco padrão do calendário no Chrome/Edge */
+/* Oculta o ícone de calendário nativo que fica feio no dark mode */
 .inputField::-webkit-calendar-picker-indicator {
   filter: invert(1); 
   cursor: pointer;
 }
 
-.inputField:focus {
+.inputField:focus, .inputFormCard:focus {
   outline: none;
-  border-color: #34d399; /* Cor turquesa do seu botão */
+  border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.1);
 }
 
 .inputField::placeholder {
-  color: #475569; /* Cinza discreto */
+  color: #475569;
 }
 
-/* O Botão "Salvar Dia" */
+/* --- BOTÕES --- */
 .btnPrincipal {
   padding: 12px 24px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  color: #0f172a;
+  font-size: 1rem;
+  color: var(--bg-dark);
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  transition: 0.2s;
-  height: 48px; /* Alinha com a altura dos inputs */
+  transition: all 0.2s ease;
+  height: 48px;
+  white-space: nowrap;
 }
 
 .btnPrincipal:hover {
@@ -262,106 +118,131 @@
   box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
 }
 
-/* No seu CaixaDiario.module.css */
-
-/* Deixa os inputs de edição dentro da tabela escuros também */
-.inputEdicao {
-  background: #0f172a;
-  border: 1px solid #34d399;
-  color: white;
-  padding: 5px;
-  border-radius: 4px;
-  width: 80px;
+.btnPrincipal:active {
+  transform: translateY(1px);
 }
 
-/* Espaçamento nos ícones da tabela */
+/* Botões de Ação na Tabela */
+.btnIcon, .btnSalvar, .btnCancelar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  font-size: 1.1rem;
+}
+
+.btnIcon:hover, .btnSalvar:hover, .btnCancelar:hover {
+  opacity: 1;
+}
+
+/* --- TABELA E LISTAGEM --- */
+.tabelaWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e2e8f0;
+  min-width: 600px;
+}
+
+.tabela th {
+  text-align: left;
+  padding: 12px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.tabela td {
+  padding: 16px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.linhaEditando {
+  background-color: rgba(52, 211, 153, 0.05);
+}
+
+.inputEdicao {
+  background: var(--bg-dark);
+  border: 1px solid var(--accent);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100px;
+  transition: all 0.2s ease;
+}
+
+.inputEdicao:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.15);
+}
+
 .acoes {
   display: flex;
-  gap: 15px; /* Aumenta o espaço entre o lápis e o lixo */
+  gap: 15px;
   justify-content: flex-start;
 }
 
-/* =======================================================
-   RESPONSIVIDADE (MOBILE E TABLET)
-   ======================================================= */
+/* --- TEXTOS E FEEDBACKS DE LUCRO --- */
+.lucroPositivo { color: var(--accent); }
+.lucroNegativo { color: var(--red-alert); }
 
-/* Para tablets e celulares (telas até 768px) */
-@media (max-width: 768px) {
-  .container {
-    padding: 20px 10px;
-    gap: 3rem;
-  }
-
-  .formCard {
-    padding: 25px 20px;
-  }
-
-  .formCard h2 {
-    font-size: 1.4rem;
-  }
-
-  /* Empilha os inputs e o botão */
-  .formInline {
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .inputField,
-  .btnPrincipal {
-    width: 100%; /* Faz todos os campos ocuparem a largura total no mobile */
-  }
-
-  .btnPrincipal {
-    margin-top: 10px;
-  }
-
-  /* Ajustes da Tabela para não quebrar no mobile (Scroll Horizontal) */
-  .listCard {
-    padding: 20px 15px;
-    overflow-x: auto; /* Permite arrastar a tabela para o lado em telas pequenas */
-  }
-
-  .tabela {
-    min-width: 600px; /* Força uma largura mínima para a tabela manter a estrutura */
-  }
-
-  .tabela th, 
-  .tabela td {
-    padding: 12px 8px;
-    font-size: 0.9rem;
-  }
+.margemTag { 
+  font-size: 0.8rem; 
+  color: var(--text-muted); 
+  font-weight: normal; 
 }
 
-/* Para celulares muito pequenos (telas até 480px) */
-@media (max-width: 480px) {
-  .formCard h2 {
-    font-size: 1.25rem;
-  }
-
-  .subtitle {
-    font-size: 0.85rem;
-    margin-bottom: 20px;
-  }
-
-  .feedbackCard {
-    padding: 15px;
-  }
-
-  .feedbackCard h3 {
-    font-size: 1rem;
-  }
-
-  .feedbackCard p {
-    font-size: 0.85rem;
-  }
+.vazio { 
+  text-align: center; 
+  color: var(--text-muted); 
+  padding: 20px; 
+  font-style: italic; 
 }
 
-/* CSS do Gráfico em Tabela */
+/* --- FEEDBACK CARDS (Mantidos do seu CSS original) --- */
+.feedbackCard {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  text-align: left;
+}
+
+.goodFeedback {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+.goodFeedback h3 { color: #34d399; margin-bottom: 4px; }
+
+.badFeedback {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+.badFeedback h3 { color: #f87171; margin-bottom: 4px; }
+
+.badFeedback p, .goodFeedback p {
+  color: #e2e8f0;
+  font-size: 0.9rem;
+}
+
+/* --- GRÁFICOS --- */
+/* Gráfico Recharts */
+.chartContainer {
+  width: 100%;
+  height: 350px;
+  margin-top: 20px;
+}
+
+/* Gráfico em barras manuais (Mantido do seu CSS original) */
 .graficoFundo {
   width: 100%;
   height: 12px;
-  background-color: var(--border); /* Ou algo tipo rgba(255, 255, 255, 0.1) se não usar variáveis */
+  background-color: var(--border);
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -369,7 +250,73 @@
 
 .graficoBarra {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2)); /* Ou "#38bdf8" */
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
   border-radius: 8px;
   transition: width 0.5s ease-out;
+}
+
+/* --- RESPONSIVIDADE (MOBILE E TABLET) --- */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 10px;
+    gap: 2rem;
+  }
+
+  .formCard, .listCard {
+    padding: 25px 20px;
+  }
+
+  .formCard h2 { 
+    font-size: 1.4rem; 
+  }
+
+  .formInline {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .inputField, .btnPrincipal {
+    width: 100%;
+  }
+
+  .btnPrincipal {
+    margin-top: 10px;
+  }
+
+  .listCard {
+    overflow-x: auto;
+  }
+
+  .chartContainer {
+    height: 300px;
+  }
+
+  .tabela th, .tabela td {
+    padding: 12px 8px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .formCard h2 { 
+    font-size: 1.25rem; 
+  }
+  
+  .subtitle { 
+    font-size: 0.85rem; 
+    margin-bottom: 20px; 
+  }
+  
+  .feedbackCard {
+    padding: 15px;
+  }
+  
+  .feedbackCard h3 {
+    font-size: 1rem;
+  }
+  
+  .feedbackCard p {
+    font-size: 0.85rem;
+  }
 }

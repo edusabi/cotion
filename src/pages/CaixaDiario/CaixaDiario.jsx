@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, ComposedChart 
+} from "recharts";
 import styles from "./CaixaDiario.module.css";
 
 const api = axios.create({
@@ -94,26 +97,24 @@ const CaixaDiario = () => {
     }
   };
 
-  // 🔥 LÓGICA DO GRÁFICO / RESUMO MENSAL
+  // 🔥 LÓGICA DO RESUMO MENSAL
   const resumoMensal = useMemo(() => {
     const resumo = {};
 
     registros.forEach(reg => {
-      // Pega "YYYY-MM" do formato "YYYY-MM-DD"
       const [ano, mes] = reg.data.split('-'); 
       const chave = `${ano}-${mes}`;
 
       if (!resumo[chave]) {
         resumo[chave] = {
           mesAnoExibicao: `${NOME_MESES[Number(mes) - 1]} / ${ano}`,
-          ordenacao: Number(`${ano}${mes}`), // Para ordenar fácil
+          ordenacao: Number(`${ano}${mes}`), 
           vendas: 0,
           gastos: 0,
           lucro: 0
         };
       }
 
-      // Calcula o lucro caso não venha calculado (Vendas - Gastos)
       const lucroDoDia = reg.lucro !== undefined ? reg.lucro : (reg.vendas_total - reg.gastos_total);
 
       resumo[chave].vendas += Number(reg.vendas_total);
@@ -121,12 +122,14 @@ const CaixaDiario = () => {
       resumo[chave].lucro += Number(lucroDoDia);
     });
 
-    // Transforma objeto em array e ordena do mais recente para o mais antigo
+    // Transforma objeto em array e ordena do mais recente para o mais antigo (Para a Tabela)
     return Object.values(resumo).sort((a, b) => b.ordenacao - a.ordenacao);
   }, [registros]);
 
-  // Pegar o maior mês de vendas para criar a barrinha visual de gráfico
-  const maxVendasMensal = resumoMensal.length > 0 ? Math.max(...resumoMensal.map(m => m.vendas)) : 1;
+  // Dados para o Gráfico: precisamos inverter a ordem (do mais antigo para o mais novo) para a linha do tempo ficar certa
+  const dadosGrafico = useMemo(() => {
+    return [...resumoMensal].sort((a, b) => a.ordenacao - b.ordenacao);
+  }, [resumoMensal]);
 
   if (loading) return <div className={styles.loading}>Carregando caixa...</div>;
 
@@ -165,56 +168,7 @@ const CaixaDiario = () => {
         </form>
       </section>
 
-      {/* 🔥 NOVA SEÇÃO: GRÁFICO EM TABELA MENSAL */}
-      {resumoMensal.length > 0 && (
-        <section className={styles.listCard} style={{ marginBottom: "2rem" }}>
-          <h3>📅 Faturamento Mensal</h3>
-          <div className={styles.tabelaWrapper}>
-            <table className={styles.tabela}>
-              <thead>
-                <tr>
-                  <th>Mês</th>
-                  <th>Vendas Totais</th>
-                  <th style={{ width: "25%" }}>Gráfico (Vendas)</th>
-                  <th>Gastos Totais</th>
-                  <th>Lucro Líquido</th>
-                </tr>
-              </thead>
-              <tbody>
-                {resumoMensal.map(mes => {
-                  const margem = mes.vendas > 0 ? (mes.lucro / mes.vendas) * 100 : 0;
-                  const tamanhoBarra = (mes.vendas / maxVendasMensal) * 100; // Porcentagem pro gráfico
-
-                  return (
-                    <tr key={mes.ordenacao}>
-                      <td><strong>{mes.mesAnoExibicao}</strong></td>
-                      <td>R$ {mes.vendas.toFixed(2)}</td>
-                      
-                      {/* CÉLULA DO GRÁFICO VISUAL */}
-                      <td>
-                        <div className={styles.graficoFundo}>
-                          <div 
-                            className={styles.graficoBarra} 
-                            style={{ width: `${tamanhoBarra}%` }}
-                          ></div>
-                        </div>
-                      </td>
-
-                      <td style={{ color: '#ef4444' }}>R$ {mes.gastos.toFixed(2)}</td>
-                      <td className={mes.lucro < 0 ? styles.lucroNegativo : styles.lucroPositivo}>
-                        <strong>R$ {mes.lucro.toFixed(2)}</strong>
-                        <span className={styles.margemTag}> ({margem.toFixed(0)}%)</span>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
-
-      {/* SEÇÃO HISTÓRICO DIÁRIO */}
+      {/* 🔥 1º - SEÇÃO HISTÓRICO DIÁRIO (Agora vem primeiro) */}
       <section className={styles.listCard}>
         <h3>📊 Histórico de Fechamentos (Diário)</h3>
         <div className={styles.tabelaWrapper}>
@@ -293,6 +247,64 @@ const CaixaDiario = () => {
           )}
         </div>
       </section>
+
+      {/* 🔥 2º - NOVA SEÇÃO: GRÁFICO E TABELA MENSAL */}
+      {resumoMensal.length > 0 && (
+        <section className={styles.listCard} style={{ marginBottom: "2rem" }}>
+          <h3>📅 Faturamento Mensal</h3>
+          
+          {/* GRÁFICO RECHARTS */}
+          <div className={styles.chartContainer}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={dadosGrafico} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" vertical={false} />
+                <XAxis dataKey="mesAnoExibicao" stroke="#94a3b8" tick={{ fill: '#94a3b8' }} />
+                <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8' }} tickFormatter={(value) => `R$${value}`} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#1e293b', borderColor: '#38bdf8', color: '#f8fafc', borderRadius: '8px' }}
+                  itemStyle={{ color: '#e2e8f0' }}
+                  formatter={(value) => `R$ ${value.toFixed(2)}`}
+                />
+                <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                <Bar dataKey="vendas" name="Vendas" fill="#34d399" radius={[4, 4, 0, 0]} barSize={40} />
+                <Bar dataKey="gastos" name="Gastos" fill="#ef4444" radius={[4, 4, 0, 0]} barSize={40} />
+                <Line type="monotone" dataKey="lucro" name="Lucro Líquido" stroke="#38bdf8" strokeWidth={3} dot={{ r: 5 }} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* TABELA DE DETALHES MENSAIS */}
+          <div className={styles.tabelaWrapper} style={{ marginTop: '2rem' }}>
+            <table className={styles.tabela}>
+              <thead>
+                <tr>
+                  <th>Mês</th>
+                  <th>Vendas Totais</th>
+                  <th>Gastos Totais</th>
+                  <th>Lucro Líquido</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resumoMensal.map(mes => {
+                  const margem = mes.vendas > 0 ? (mes.lucro / mes.vendas) * 100 : 0;
+
+                  return (
+                    <tr key={mes.ordenacao}>
+                      <td><strong>{mes.mesAnoExibicao}</strong></td>
+                      <td>R$ {mes.vendas.toFixed(2)}</td>
+                      <td style={{ color: '#ef4444' }}>R$ {mes.gastos.toFixed(2)}</td>
+                      <td className={mes.lucro < 0 ? styles.lucroNegativo : styles.lucroPositivo}>
+                        <strong>R$ {mes.lucro.toFixed(2)}</strong>
+                        <span className={styles.margemTag}> ({margem.toFixed(0)}%)</span>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </div>
   );
 };
