@@ -127,7 +127,6 @@ const CaixaDiario = () => {
     return [...resumoMensal].sort((a, b) => a.ordenacao - b.ordenacao);
   }, [resumoMensal]);
 
-  // 🔥 FUNÇÕES DE COMPARTILHAMENTO ATUALIZADAS
   const gerarTextoRelatorio = () => {
     let texto = "📊 *Resumo de Faturamento Mensal*\n\n";
     
@@ -139,20 +138,26 @@ const CaixaDiario = () => {
     });
     
     texto += "Gerado pelo Sistema do Cotion ";
-    return encodeURIComponent(texto); // Codifica para formato de URL
+    return encodeURIComponent(texto); 
   };
 
   const compartilharWhatsApp = () => {
     const texto = gerarTextoRelatorio();
-    // WhatsApp funciona bem com _blank porque abre uma página web (api.whatsapp.com)
     window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
   };
 
+  // 🔥 CORREÇÃO DEFINITIVA DO E-MAIL
   const compartilharEmail = () => {
     const texto = gerarTextoRelatorio();
     const assunto = encodeURIComponent("Relatório de Faturamento Mensal");
-    // CORREÇÃO: Usar window.location.href em vez de window.open para evitar a aba em branco fantasma
-    window.location.href = `mailto:?subject=${assunto}&body=${texto}`;
+    const mailtoLink = `mailto:?subject=${assunto}&body=${texto}`;
+
+    // Cria um elemento <a> invisível e força o clique nele
+    const link = document.createElement("a");
+    link.href = mailtoLink;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (loading) return <div className={styles.loading}>Carregando caixa...</div>;
@@ -274,7 +279,6 @@ const CaixaDiario = () => {
       {resumoMensal.length > 0 && (
         <section className={styles.listCard} style={{ marginBottom: "2rem" }}>
           
-          {/* 🔥 NOVO CABEÇALHO COM BOTÕES DE COMPARTILHAR */}
           <div className={styles.headerMensal}>
             <h3>📅 Faturamento Mensal</h3>
             <div className={styles.botoesCompartilhar}>
@@ -287,7 +291,6 @@ const CaixaDiario = () => {
             </div>
           </div>
           
-          {/* GRÁFICO RECHARTS */}
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={dadosGrafico} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
@@ -307,7 +310,6 @@ const CaixaDiario = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* TABELA DE DETALHES MENSAIS */}
           <div className={styles.tabelaWrapper} style={{ marginTop: '2rem' }}>
             <table className={styles.tabela}>
               <thead>
