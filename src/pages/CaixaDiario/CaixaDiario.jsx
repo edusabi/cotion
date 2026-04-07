@@ -162,20 +162,6 @@ const CaixaDiario = () => {
     window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
   };
 
-  // 🔥 CORREÇÃO DEFINITIVA DO E-MAIL
-  const compartilharEmail = () => {
-    const texto = gerarTextoRelatorio();
-    const assunto = encodeURIComponent("Relatório de Faturamento Mensal");
-    const mailtoLink = `mailto:?subject=${assunto}&body=${texto}`;
-
-    // Cria um elemento <a> invisível e força o clique nele
-    const link = document.createElement("a");
-    link.href = mailtoLink;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   if (loading) return <div className={styles.loading}>Carregando caixa...</div>;
 
   return (
@@ -300,9 +286,6 @@ const CaixaDiario = () => {
             <div className={styles.botoesCompartilhar}>
               <button onClick={compartilharWhatsApp} className={`${styles.btnCompartilhar} ${styles.bgZap}`}>
                 📱 Enviar via Whatsapp
-              </button>
-              <button onClick={compartilharEmail} className={`${styles.btnCompartilhar} ${styles.bgEmail}`}>
-                ✉️ Enviar por E-mail
               </button>
             </div>
           </div>
