@@ -6,7 +6,7 @@ import {
 import styles from "./CaixaDiario.module.css";
 
 const api = axios.create({
-  baseURL: "/api/cash/",
+  baseURL: "/api",
   withCredentials: true,
 });
 
@@ -31,7 +31,7 @@ const CaixaDiario = () => {
 
   const buscarRegistros = async () => {
     try {
-      const { data } = await api.get("/");
+      const { data } = await api.get("/cash");
       
       // Validação de segurança: garante que o estado só receba um array
       if (Array.isArray(data)) {
@@ -53,7 +53,7 @@ const CaixaDiario = () => {
   const salvarNovo = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/", {
+      await api.post("/cash", {
         vendas_total: Number(novoRegistro.vendas),
         gastos_total: Number(novoRegistro.gastos),
         data_registro: novoRegistro.data 
@@ -85,7 +85,7 @@ const CaixaDiario = () => {
 
   const salvarEdicao = async (id) => {
     try {
-      await api.put(`/${id}`, {
+      await api.put(`/cash/${id}`, {
         vendas_total: Number(dadosEditados.vendas),
         gastos_total: Number(dadosEditados.gastos)
       });
@@ -99,7 +99,7 @@ const CaixaDiario = () => {
   const handleExcluir = async (id) => {
     if (!window.confirm("Tem certeza que deseja excluir este registro de caixa?")) return;
     try {
-      await api.delete(`/${id}`);
+      await api.delete(`/cash/${id}`);
       setRegistros(registros.filter(r => r.id !== id));
     } catch (err) {
       alert("Erro ao excluir.");
