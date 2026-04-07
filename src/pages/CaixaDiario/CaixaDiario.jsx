@@ -32,9 +32,19 @@ const CaixaDiario = () => {
   const buscarRegistros = async () => {
     try {
       const { data } = await api.get("/");
-      setRegistros(data);
+      
+      // Validação de segurança: garante que o estado só receba um array
+      if (Array.isArray(data)) {
+        setRegistros(data);
+      } else if (data && Array.isArray(data.data)) {
+        // Cobre o caso de APIs que envelopam a resposta em um objeto "data"
+        setRegistros(data.data);
+      } else {
+        setRegistros([]); // Fallback seguro
+      }
     } catch (err) {
       console.error("Erro ao buscar registros:", err);
+      setRegistros([]); // Mantém como array mesmo em caso de erro na requisição
     } finally {
       setLoading(false);
     }
@@ -99,26 +109,32 @@ const CaixaDiario = () => {
   const resumoMensal = useMemo(() => {
     const resumo = {};
 
-    registros.forEach(reg => {
-      const [ano, mes] = reg.data.split('-'); 
-      const chave = `${ano}-${mes}`;
+    // Verifica se registros é um array antes de iterar
+    if (Array.isArray(registros)) {
+      registros.forEach(reg => {
+        // Pula iterações que não tenham o formato de data correto
+        if (!reg || !reg.data) return;
 
-      if (!resumo[chave]) {
-        resumo[chave] = {
-          mesAnoExibicao: `${NOME_MESES[Number(mes) - 1]} / ${ano}`,
-          ordenacao: Number(`${ano}${mes}`), 
-          vendas: 0,
-          gastos: 0,
-          lucro: 0
-        };
-      }
+        const [ano, mes] = reg.data.split('-'); 
+        const chave = `${ano}-${mes}`;
 
-      const lucroDoDia = reg.lucro !== undefined ? reg.lucro : (reg.vendas_total - reg.gastos_total);
+        if (!resumo[chave]) {
+          resumo[chave] = {
+            mesAnoExibicao: `${NOME_MESES[Number(mes) - 1]} / ${ano}`,
+            ordenacao: Number(`${ano}${mes}`), 
+            vendas: 0,
+            gastos: 0,
+            lucro: 0
+          };
+        }
 
-      resumo[chave].vendas += Number(reg.vendas_total);
-      resumo[chave].gastos += Number(reg.gastos_total);
-      resumo[chave].lucro += Number(lucroDoDia);
-    });
+        const lucroDoDia = reg.lucro !== undefined ? reg.lucro : (reg.vendas_total - reg.gastos_total);
+
+        resumo[chave].vendas += Number(reg.vendas_total);
+        resumo[chave].gastos += Number(reg.gastos_total);
+        resumo[chave].lucro += Number(lucroDoDia);
+      });
+    }
 
     return Object.values(resumo).sort((a, b) => b.ordenacao - a.ordenacao);
   }, [registros]);
@@ -211,14 +227,14 @@ const CaixaDiario = () => {
               </tr>
             </thead>
             <tbody>
-              {registros.map(reg => {
+              {Array.isArray(registros) && registros.map(reg => {
                 const ehEdicao = editandoId === reg.id;
                 const lucroCalc = reg.lucro !== undefined ? reg.lucro : (reg.vendas_total - reg.gastos_total);
                 const margem = reg.vendas_total > 0 ? (lucroCalc / reg.vendas_total) * 100 : 0;
                 
                 return (
                   <tr key={reg.id} className={ehEdicao ? styles.linhaEditando : ''}>
-                    <td>{reg.data.split('-').reverse().join('/')}</td>
+                    <td>{reg.data ? reg.data.split('-').reverse().join('/') : '-'}</td>
                     
                     <td>
                       {ehEdicao ? (
@@ -229,7 +245,7 @@ const CaixaDiario = () => {
                           className={styles.inputEdicao}
                         />
                       ) : (
-                        `R$ ${reg.vendas_total.toFixed(2)}`
+                        `R$ ${Number(reg.vendas_total || 0).toFixed(2)}`
                       )}
                     </td>
 
@@ -242,12 +258,12 @@ const CaixaDiario = () => {
                           className={styles.inputEdicao}
                         />
                       ) : (
-                        `R$ ${reg.gastos_total.toFixed(2)}`
+                        `R$ ${Number(reg.gastos_total || 0).toFixed(2)}`
                       )}
                     </td>
 
                     <td className={lucroCalc < 0 ? styles.lucroNegativo : styles.lucroPositivo}>
-                      <strong>R$ {lucroCalc.toFixed(2)}</strong>
+                      <strong>R$ {Number(lucroCalc || 0).toFixed(2)}</strong>
                       <span className={styles.margemTag}>({margem.toFixed(0)}%)</span>
                     </td>
 
@@ -270,7 +286,7 @@ const CaixaDiario = () => {
             </tbody>
           </table>
           
-          {registros.length === 0 && (
+          {(!Array.isArray(registros) || registros.length === 0) && (
             <p className={styles.vazio}>Nenhum fechamento registrado ainda. Comece acima!</p>
           )}
         </div>
